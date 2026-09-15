@@ -1,0 +1,2840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Apex Gaming - Fantasy Cricket</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-canvas: #07080c;
+      --bg-surface: #11131a;
+      --bg-surface-elevated: #181b24;
+      --bg-surface-hover: #222634;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-highlight: rgba(255, 255, 255, 0.16);
+      
+      --text-primary: #ffffff;
+      --text-secondary: #9aa2b5;
+      --text-tertiary: #5e6678;
+      
+      --accent-gold: #e5b869;
+      --accent-green: #10b981;
+      --accent-blue: #38bdf8;
+      --accent-purple: #a855f7;
+      --accent-brand: #ff6b4a;
+      --accent-red: #ff5252;
+      
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 13px;
+      --radius-sm: 8px;
+      --radius-full: 9999px;
+
+      --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background: #030406;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-primary);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .device-wrapper {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      max-width: 430px;
+      max-height: 932px;
+      background: var(--bg-canvas);
+      border-radius: 0;
+      border: none;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.95);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    @media (min-width: 480px) {
+      body { padding: 12px 6px; }
+      .device-wrapper {
+        height: 870px;
+        max-height: 98vh;
+        border-radius: 48px;
+        border: 4px solid #242834;
+      }
+    }
+
+    .status-bar {
+      height: 42px;
+      padding: 10px 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 30;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .dynamic-island {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 24px;
+      background: #000;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .camera-lens { width: 8px; height: 8px; border-radius: 50%; background: #0b0e17; margin-left: auto; }
+    .sensor { width: 5px; height: 5px; border-radius: 50%; background: #0e121e; margin-right: 4px; }
+    .status-icons { display: flex; gap: 6px; align-items: center; }
+
+    /* Top Universal Header */
+    .universal-header {
+      height: 60px;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(17, 19, 26, 0.94);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      z-index: 25;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff6b4a, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      background: linear-gradient(135deg, #fff 40%, var(--accent-gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .wallet-icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg-surface-elevated);
+      border: 1.5px solid var(--accent-gold);
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(229, 184, 105, 0.2);
+      transition: transform 0.2s;
+    }
+    .wallet-icon-btn:active { transform: scale(0.9); }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .icon-btn:active { transform: scale(0.9); }
+
+    /* Screens Viewport */
+    .screens-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      padding: 14px 16px 85px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      opacity: 0;
+      transform: translate3d(12px, 0, 0);
+      pointer-events: none;
+      transition: opacity 0.25s var(--ease-spring), transform 0.25s var(--ease-spring);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .screen::-webkit-scrollbar { display: none; }
+    .screen.active {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      pointer-events: auto;
+    }
+
+    /* Floating Navigation */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+      background: rgba(17, 19, 26, 0.96);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 6px 8px;
+      z-index: 25;
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      gap: 3px;
+      padding: 6px 10px;
+      transition: color 0.2s, transform 0.2s;
+      flex: 1;
+    }
+    .nav-btn.active { color: var(--accent-gold); }
+    .nav-label { font-size: 10px; font-weight: 700; }
+
+    /* Carousel Slider Track */
+    .carousel-slider-container {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+      border-radius: var(--radius-lg);
+    }
+
+    .carousel-slider-track {
+      display: flex;
+      width: 100%;
+      transition: transform 0.42s var(--ease-spring);
+      will-change: transform;
+    }
+
+    .hero-banner {
+      width: 100%;
+      min-width: 100%;
+      max-width: 100%;
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-sizing: border-box;
+    }
+
+    .carousel-dots-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      margin-top: -6px;
+      margin-bottom: 2px;
+      flex-shrink: 0;
+    }
+
+    .carousel-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .carousel-dot.active {
+      width: 18px;
+      background: var(--accent-gold);
+    }
+
+    .tag-badge {
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      display: inline-block;
+      text-transform: uppercase;
+      background: rgba(229, 184, 105, 0.18);
+      color: var(--accent-gold);
+      border: 1px solid rgba(229, 184, 105, 0.4);
+      margin-bottom: 6px;
+    }
+
+    .match-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+      flex-shrink: 0;
+    }
+    .match-card:active {
+      transform: scale(0.985);
+      border-color: var(--accent-gold);
+    }
+
+    .match-teams-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .team-block {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .team-flag {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--bg-surface-elevated);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      border: 1px solid var(--border-subtle);
+    }
+    .team-name { font-size: 13.5px; font-weight: 800; }
+    .versus-badge { font-size: 11px; font-weight: 800; color: var(--text-tertiary); }
+
+    .match-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 8px;
+      font-size: 11px;
+    }
+
+    .wallet-action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .primary-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #e5b869, #be973d);
+      border-radius: var(--radius-full);
+      border: none;
+      color: #0c0d12;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .primary-btn:active { transform: scale(0.97); }
+    .primary-btn.secondary-btn {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-highlight);
+      color: #ffffff;
+    }
+
+    .filter-scroll-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      padding: 4px 2px 8px 2px;
+      width: 100%;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      flex-shrink: 0;
+    }
+    .filter-scroll-row::-webkit-scrollbar { display: none; }
+
+    .tab-pill-btn {
+      padding: 8px 14px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--bg-surface-elevated);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .tab-pill-btn.active {
+      background: var(--accent-gold);
+      color: #0c0d12;
+      border-color: var(--accent-gold);
+    }
+
+    .list-tile {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    /* FAQ & Collapsible Cards */
+    .faq-card {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .faq-header {
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+    .faq-body {
+      padding: 0 14px 12px;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      display: none;
+    }
+    .faq-card.open .faq-body {
+      display: block;
+    }
+    .faq-card.open .faq-icon {
+      transform: rotate(180deg);
+    }
+    .faq-icon {
+      transition: transform 0.2s ease;
+    }
+
+    .contest-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+      transition: border-color 0.2s;
+    }
+    .contest-card:hover {
+      border-color: rgba(229, 184, 105, 0.4);
+    }
+    .contest-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .contest-pool {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+    }
+    .contest-entry-btn {
+      background: var(--accent-green);
+      color: #07080c;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 7px 18px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .contest-entry-btn:active {
+      transform: scale(0.95);
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6b4a, var(--accent-gold));
+      border-radius: 99px;
+    }
+
+    /* Modal Popup Sheet */
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: flex-end;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s var(--ease-spring);
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-sheet {
+      width: 100%;
+      max-height: 88%;
+      overflow-y: auto;
+      background: var(--bg-surface);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      border-top: 1px solid var(--border-highlight);
+      padding: 16px 16px 32px;
+      transform: translate3d(0, 100%, 0);
+      transition: transform 0.35s var(--ease-spring);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .modal-overlay.open .modal-sheet { transform: translate3d(0, 0, 0); }
+    .modal-drag { width: 34px; height: 4px; border-radius: 99px; background: var(--border-highlight); margin: 0 auto 4px; }
+
+    /* Inputs & Selects */
+    .input-box {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .input-box input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      outline: none;
+      width: 100%;
+    }
+    .network-select {
+      background: var(--bg-surface);
+      color: #fff;
+      border: 1px solid var(--border-subtle);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      width: 100%;
+      outline: none;
+    }
+    .crypto-conversion-badge {
+      background: rgba(229, 184, 105, 0.12);
+      border: 1px solid rgba(229, 184, 105, 0.3);
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      font-size: 11.5px;
+      color: var(--accent-gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    /* Isolated Profile Layer Covering Full Screen */
+    .profile-fullscreen-layer {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-canvas);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      transform: translate3d(-100%, 0, 0);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.32s var(--ease-spring), opacity 0.32s var(--ease-spring);
+    }
+    .profile-fullscreen-layer.active {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .profile-bar-header {
+      height: 60px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(17, 19, 26, 0.94);
+      border-bottom: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
+    .profile-scroll-body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 14px 16px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .profile-scroll-body::-webkit-scrollbar { display: none; }
+
+    /* Pop-up Edit Profile Modal */
+    .profile-edit-popup {
+      position: absolute;
+      top: 48px;
+      right: 12px;
+      width: 275px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-highlight);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 60;
+      transform-origin: top right;
+      animation: popupScale 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes popupScale {
+      from { opacity: 0; transform: scale(0.88); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .profile-edit-popup.open {
+      display: flex;
+    }
+
+    .popup-input-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+    }
+    .popup-input-item label {
+      font-size: 8.5px;
+      font-weight: 800;
+      color: var(--text-tertiary);
+      letter-spacing: 0.5px;
+    }
+    .popup-input-item input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      outline: none;
+      width: 100%;
+    }
+
+    /* Address Options Dropdown */
+    .address-menu-popup {
+      position: absolute;
+      right: 10px;
+      top: 40px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-highlight);
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.85);
+      padding: 6px;
+      z-index: 60;
+      display: none;
+      flex-direction: column;
+      min-width: 125px;
+    }
+    .address-menu-popup.open {
+      display: flex;
+    }
+    .address-menu-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-red);
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-align: left;
+    }
+    .address-menu-btn:hover, .address-menu-btn:active {
+      background: rgba(255, 82, 82, 0.12);
+    }
+
+    /* Live Chat/Support UI */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .chat-bubble {
+      max-width: 82%;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .chat-agent {
+      align-self: flex-start;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+    .chat-user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, var(--accent-brand), #d44d2d);
+      color: #ffffff;
+    }
+    .chat-input-bar {
+      display: flex;
+      gap: 8px;
+      padding: 10px 0;
+      border-top: 1px solid var(--border-subtle);
+      align-items: center;
+      margin-top: auto;
+    }
+
+    /* Fantasy Points System Table Styles */
+    .points-table-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .pts-table-wrap {
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      background: var(--bg-surface-elevated);
+    }
+    .pts-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      text-align: left;
+    }
+    .pts-table th {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 8px 10px;
+      font-weight: 800;
+      color: var(--accent-gold);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .pts-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .pts-table td:first-child {
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+    }
+
+    .toast {
+      position: absolute;
+      top: 48px;
+      left: 16px;
+      right: 16px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--accent-green);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translate3d(0, -80px, 0);
+      opacity: 0;
+      transition: all 0.3s var(--ease-spring);
+      z-index: 200;
+    }
+    .toast.show { transform: translate3d(0, 0, 0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <div class="device-wrapper">
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="dynamic-island">
+        <div class="sensor"></div>
+        <div class="camera-lens"></div>
+      </div>
+      <div class="status-icons">
+        <i data-lucide="signal" style="width: 12px; height: 12px;"></i>
+        <i data-lucide="wifi" style="width: 12px; height: 12px;"></i>
+        <i data-lucide="battery" style="width: 15px; height: 15px;"></i>
+      </div>
+    </div>
+
+    <!-- Universal Header -->
+    <header class="universal-header">
+      <div class="header-left" onclick="openProfileLayer()">
+        <div class="user-avatar" id="header-avatar-initial">D</div>
+        <div>
+          <div class="brand-title">Apex Gaming</div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button class="wallet-icon-btn" onclick="openHomeWalletModal()" title="Open Wallet">
+          <i data-lucide="wallet" style="width: 18px; height: 18px;"></i>
+        </button>
+        <button class="icon-btn" onclick="triggerToast('Notifications up to date')">
+          <i data-lucide="bell" style="width: 16px; height: 16px;"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+      <i data-lucide="check-circle-2" style="color: var(--accent-green); width: 17px; height: 17px;"></i>
+      <span id="toast-msg" style="font-size: 11.5px; font-weight: 700;">Action completed</span>
+    </div>
+
+    <div class="screens-viewport">
+
+      <!-- ================= SCREEN: FANTASY CRICKET HOME ================= -->
+      <section class="screen active" id="view-cricket-home">
+        
+        <!-- One-Bar Carousel -->
+        <div class="carousel-slider-container" id="home-carousel-container">
+          <div class="carousel-slider-track" id="home-carousel-track">
+            
+            <!-- Card 1: Mega T20 Carnival -->
+            <div class="hero-banner" style="background: linear-gradient(135deg, #2b1f13 0%, #15110d 100%); border: 1.2px solid rgba(229, 184, 105, 0.35);">
+              <span class="tag-badge">MEGA T20 CARNIVAL</span>
+              <h2 style="font-size: 18px; font-weight: 800;">India vs Australia</h2>
+              <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Grand Prize Pool ₹2.5 Crore • 1st Prize ₹25 Lakh</p>
+              <button class="primary-btn" style="margin-top: 12px; width: auto; padding: 8px 18px;" onclick="openMatchContests('IND vs AUS T20', 'IND', 'AUS', 'Starts in 18m')">
+                Join Contest ₹49
+              </button>
+            </div>
+
+            <!-- Card 2: Live Match -->
+            <div class="hero-banner" style="background: linear-gradient(135deg, #10251c 0%, #0c1813 100%); border: 1.2px solid rgba(16, 185, 129, 0.4);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-badge" style="background: rgba(16,185,129,0.18); color: var(--accent-green); border-color: rgba(16,185,129,0.4); margin: 0;">● LIVE IN PLAY</span>
+                <span style="font-size: 11px; font-weight: 800; color: var(--accent-gold);">Rank #14 / 24,000</span>
+              </div>
+              <h2 style="font-size: 17px; font-weight: 800; margin-top: 8px;">IND (142/3) vs AUS</h2>
+              <p style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">14.2 Overs • Fantasy Points: <strong style="color: var(--accent-green);">482.5 Pts</strong></p>
+              <button class="primary-btn" style="margin-top: 12px; width: auto; padding: 8px 18px; background: var(--bg-surface-elevated); color: #fff; border: 1px solid var(--accent-green);" onclick="triggerToast('Opening Live Scorecard & Leaderboard...')">
+                View Live Scorecard
+              </button>
+            </div>
+
+            <!-- Card 3: Completed Match 1 -->
+            <div class="hero-banner" style="background: linear-gradient(135deg, #181d2a 0%, #0f121a 100%); border: 1.2px solid rgba(56, 189, 248, 0.35);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-badge" style="background: rgba(56,189,248,0.18); color: var(--accent-blue); border-color: rgba(56,189,248,0.4); margin: 0;">COMPLETED MATCH</span>
+                <span style="font-size: 11px; font-weight: 800; color: var(--accent-green);">Won ₹1,50,000.00</span>
+              </div>
+              <h2 style="font-size: 17px; font-weight: 800; margin-top: 8px;">IND vs ENG 3rd T20</h2>
+              <p style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">Yesterday • Rank #1 of 35,000 • 892.5 Pts</p>
+              <button class="primary-btn" style="margin-top: 12px; width: auto; padding: 8px 18px; background: var(--bg-surface-elevated); color: #fff; border: 1px solid var(--accent-blue);" onclick="triggerToast('Viewing match contest summary')">
+                Contest Summary
+              </button>
+            </div>
+
+            <!-- Card 4: Completed Match 2 -->
+            <div class="hero-banner" style="background: linear-gradient(135deg, #251627 0%, #150d17 100%); border: 1.2px solid rgba(168, 85, 247, 0.35);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-badge" style="background: rgba(168,85,247,0.18); color: var(--accent-purple); border-color: rgba(168,85,247,0.4); margin: 0;">COMPLETED MATCH</span>
+                <span style="font-size: 11px; font-weight: 800; color: var(--accent-green);">Won ₹1,50,000.00</span>
+              </div>
+              <h2 style="font-size: 17px; font-weight: 800; margin-top: 8px;">RSA vs AUS 1st ODI</h2>
+              <p style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">28 Aug • Rank #1 of 12,000 • 670.0 Pts</p>
+              <button class="primary-btn" style="margin-top: 12px; width: auto; padding: 8px 18px; background: var(--bg-surface-elevated); color: #fff; border: 1px solid var(--accent-purple);" onclick="triggerToast('Viewing match contest summary')">
+                Contest Summary
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Dynamic Dots below Home Carousel -->
+        <div class="carousel-dots-row" id="home-carousel-dots">
+          <div class="carousel-dot active" onclick="jumpCarouselSlide('home', 0)"></div>
+          <div class="carousel-dot" onclick="jumpCarouselSlide('home', 1)"></div>
+          <div class="carousel-dot" onclick="jumpCarouselSlide('home', 2)"></div>
+          <div class="carousel-dot" onclick="jumpCarouselSlide('home', 3)"></div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 13px; font-weight: 800;">Upcoming Matches</span>
+          <span style="font-size: 10px; font-weight: 700; color: var(--accent-gold); cursor: pointer;" onclick="switchView('cricket-matches', 'matches')">View All</span>
+        </div>
+
+        <!-- Match 1: T20 -->
+        <div class="match-card" onclick="openMatchContests('IND vs AUS T20', 'IND', 'AUS', 'Starts in 18m')">
+          <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
+            <span>T20 International Cup</span>
+            <span style="color: var(--accent-brand); font-weight: 700;">● Starts in 18m</span>
+          </div>
+          <div class="match-teams-row">
+            <div class="team-block">
+              <div class="team-flag">🇮🇳</div>
+              <div>
+                <div class="team-name">IND</div>
+                <span style="font-size: 9.5px; color: var(--text-tertiary);">India</span>
+              </div>
+            </div>
+            <div class="versus-badge">VS</div>
+            <div class="team-block" style="flex-direction: row-reverse; text-align: right;">
+              <div class="team-flag">🇦🇺</div>
+              <div>
+                <div class="team-name">AUS</div>
+                <span style="font-size: 9.5px; color: var(--text-tertiary);">Australia</span>
+              </div>
+            </div>
+          </div>
+          <div class="match-footer">
+            <span style="color: var(--accent-green); font-weight: 800;">Pool: ₹2,50,00,000</span>
+            <span style="font-weight: 700; color: var(--text-secondary);">Entry ₹49</span>
+          </div>
+        </div>
+
+        <!-- Match 2: ODI -->
+        <div class="match-card" onclick="openMatchContests('ENG vs RSA ODI', 'ENG', 'RSA', 'Today, 7:30 PM')">
+          <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
+            <span>ODI World Series</span>
+            <span style="color: var(--accent-gold); font-weight: 700;">Today, 7:30 PM</span>
+          </div>
+          <div class="match-teams-row">
+            <div class="team-block">
+              <div class="team-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+              <div>
+                <div class="team-name">ENG</div>
+                <span style="font-size: 9.5px; color: var(--text-tertiary);">England</span>
+              </div>
+            </div>
+            <div class="versus-badge">VS</div>
+            <div class="team-block" style="flex-direction: row-reverse; text-align: right;">
+              <div class="team-flag">🇿🇦</div>
+              <div>
+                <div class="team-name">RSA</div>
+                <span style="font-size: 9.5px; color: var(--text-tertiary);">South Africa</span>
+              </div>
+            </div>
+          </div>
+          <div class="match-footer">
+            <span style="color: var(--accent-green); font-weight: 800;">Pool: ₹85,00,000</span>
+            <span style="font-weight: 700; color: var(--text-secondary);">Entry ₹35</span>
+          </div>
+        </div>
+
+        <!-- Match 3: T10 Match -->
+        <div class="match-card" onclick="openMatchContests('DB vs NW T10', 'DB', 'NW', 'Tomorrow, 4:00 PM')">
+          <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
+            <span style="color: var(--accent-purple); font-weight: 800;">Abu Dhabi T10 League</span>
+            <span style="color: var(--accent-gold); font-weight: 700;">Tomorrow, 4:00 PM</span>
+          </div>
+          <div class="match-teams-row">
+            <div class="team-block">
+              <div class="team-flag">⚡</div>
+              <div>
+                <div class="team-name">DB</div>
+                <span style="font-size: 9.5px; color: var(--text-tertiary);">Delhi Bulls</span>
+              </div>
+            </div>
+            <div class="versus-badge">VS</div>
+            <div class="team-block" style="flex-direction: row-reverse; text-align: right;">
+              <div class="team-flag">🏹</div>
+              <div>
+                <div class="team-name">NW</div>
+                <span style="font-size: 9.5px; color: var(--text-tertiary);">Northern Warriors</span>
+              </div>
+            </div>
+          </div>
+          <div class="match-footer">
+            <span style="color: var(--accent-green); font-weight: 800;">Pool: ₹35,00,000</span>
+            <span style="font-weight: 700; color: var(--text-secondary);">Entry ₹29</span>
+          </div>
+        </div>
+
+        <!-- Match 4: Test Match -->
+        <div class="match-card" onclick="openMatchContests('IND vs ENG 1st Test', 'IND', 'ENG', 'Starts Friday, 9:30 AM')">
+          <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
+            <span style="color: var(--accent-blue); font-weight: 800;">ICC World Test Championship</span>
+            <span style="color: var(--accent-blue); font-weight: 700;">Fri, 9:30 AM</span>
+          </div>
+          <div class="match-teams-row">
+            <div class="team-block">
+              <div class="team-flag">🇮🇳</div>
+              <div>
+                <div class="team-name">IND</div>
+                <span style="font-size: 9.5px; color: var(--text-tertiary);">India</span>
+              </div>
+            </div>
+            <div class="versus-badge">VS</div>
+            <div class="team-block" style="flex-direction: row-reverse; text-align: right;">
+              <div class="team-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+              <div>
+                <div class="team-name">ENG</div>
+                <span style="font-size: 9.5px; color: var(--text-tertiary);">England</span>
+              </div>
+            </div>
+          </div>
+          <div class="match-footer">
+            <span style="color: var(--accent-green); font-weight: 800;">Pool: ₹1,50,00,000</span>
+            <span style="font-weight: 700; color: var(--text-secondary);">Entry ₹39</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= SCREEN: MATCH DIVERSE CONTESTS ================= -->
+      <section class="screen" id="view-match-contests">
+        <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 4px; border-bottom: 1px solid var(--border-subtle); flex-shrink: 0;">
+          <button class="icon-btn" onclick="switchView('cricket-home', 'home')">
+            <i data-lucide="chevron-left" style="width: 20px; height: 20px;"></i>
+          </button>
+          <div>
+            <h3 style="font-size: 15px; font-weight: 800;" id="contest-screen-match-title">IND vs AUS T20</h3>
+            <span style="font-size: 10px; color: var(--accent-brand); font-weight: 700;" id="contest-screen-time">Starts in 18m</span>
+          </div>
+        </div>
+
+        <div class="filter-scroll-row">
+          <button class="tab-pill-btn active" id="contest-filter-all" onclick="filterContestCategories('all')">All Contests</button>
+          <button class="tab-pill-btn" id="contest-filter-mega" onclick="filterContestCategories('mega')">Mega Contest</button>
+          <button class="tab-pill-btn" id="contest-filter-h2h" onclick="filterContestCategories('h2h')">Head to Head</button>
+          <button class="tab-pill-btn" id="contest-filter-mini" onclick="filterContestCategories('mini')">Mini Contest</button>
+          <button class="tab-pill-btn" id="contest-filter-winner-takes-all" onclick="filterContestCategories('winner-takes-all')">Winner Takes All</button>
+        </div>
+
+        <div id="contests-catalog-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </section>
+
+      <!-- ================= SCREEN: FANTASY MATCHES ================= -->
+      <section class="screen" id="view-cricket-matches">
+        <div style="display: flex; gap: 8px;">
+          <button class="primary-btn tab-pill-btn active" id="btn-matches-upcoming" onclick="filterMatchesTab('upcoming')" style="flex: 1;">Upcoming (4)</button>
+          <button class="primary-btn tab-pill-btn" id="btn-matches-live" onclick="filterMatchesTab('live')" style="flex: 1;">Live (2)</button>
+          <button class="primary-btn tab-pill-btn" id="btn-matches-completed" onclick="filterMatchesTab('completed')" style="flex: 1;">Completed</button>
+        </div>
+
+        <div id="matches-tab-content" style="display: flex; flex-direction: column; gap: 10px;"></div>
+      </section>
+
+      <!-- ================= SCREEN: FANTASY WINNERS ================= -->
+      <section class="screen" id="view-cricket-winners">
+        <div class="carousel-slider-container" id="cricket-winners-carousel-container">
+          <div class="carousel-slider-track" id="cricket-winners-carousel-track">
+            
+            <div class="hero-banner" style="background: linear-gradient(135deg, #1f271b 0%, #10150e 100%); border: 1.2px solid rgba(16,185,129,0.35);">
+              <span class="tag-badge" style="color: var(--accent-green); border-color: var(--accent-green); margin: 0;">MEGA WINNER SPOTLIGHT</span>
+              <h3 style="font-size: 17px; font-weight: 800; margin-top: 8px;">Rahul K. won ₹25,00,000</h3>
+              <p style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">Mega T20 League • Ranked #1 (984 Pts)</p>
+            </div>
+
+            <div class="hero-banner" style="background: linear-gradient(135deg, #2a2013 0%, #15110d 100%); border: 1.2px solid rgba(229,184,105,0.35);">
+              <span class="tag-badge" style="color: var(--accent-gold); border-color: var(--accent-gold); margin: 0;">SERIES CHAMPION</span>
+              <h3 style="font-size: 17px; font-weight: 800; margin-top: 8px;">Dinesh R. won ₹10,00,000</h3>
+              <p style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">Super Asia Cup Grand Slam Leaderboard</p>
+            </div>
+
+            <div class="hero-banner" style="background: linear-gradient(135deg, #2b172b 0%, #150d18 100%); border: 1.2px solid rgba(168,85,247,0.35);">
+              <span class="tag-badge" style="color: var(--accent-purple); border-color: var(--accent-purple); margin: 0;">HIGH ROLLER WINNER</span>
+              <h3 style="font-size: 17px; font-weight: 800; margin-top: 8px;">Priya V. won ₹5,50,000</h3>
+              <p style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">IND vs ENG Head-to-Head Elite Contest</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="carousel-dots-row" id="cricket-winners-dots">
+          <div class="carousel-dot active" onclick="jumpCarouselSlide('cricket-winners', 0)"></div>
+          <div class="carousel-dot" onclick="jumpCarouselSlide('cricket-winners', 1)"></div>
+          <div class="carousel-dot" onclick="jumpCarouselSlide('cricket-winners', 2)"></div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
+          <span style="font-size: 13px; font-weight: 800;" id="cricket-winners-heading">Top Winners</span>
+          <div style="display: flex; gap: 6px;">
+            <button class="tab-pill-btn active" id="btn-cricket-top-win" onclick="switchWinnersTab('top')">Top Winners</button>
+            <button class="tab-pill-btn" id="btn-cricket-latest-win" onclick="switchWinnersTab('latest')">Latest Winners</button>
+          </div>
+        </div>
+
+        <div id="cricket-winners-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      </section>
+
+      <!-- ================= SCREEN: REFER & EARN ================= -->
+      <section class="screen" id="view-refer-earn">
+        <div style="background: linear-gradient(135deg, #271610 0%, #150f0c 100%); border: 1.2px solid rgba(255,107,74,0.3); border-radius: var(--radius-lg); padding: 18px; text-align: center;">
+          <span style="font-size: 28px;">🎁</span>
+          <h4 style="font-size: 16px; font-weight: 800; margin-top: 4px;">Invite Friends & Win ₹250</h4>
+          <p style="font-size: 11px; color: var(--text-secondary); margin-top: 4px; line-height: 1.4;">
+            Invite friends to Apex Gaming. Get ₹250 added directly to your balance on their first deposit!
+          </p>
+        </div>
+
+        <div class="input-box" style="text-align: center;">
+          <span style="font-size: 10px; color: var(--text-tertiary); font-weight: 700;">YOUR REFERRAL CODE</span>
+          <strong style="font-size: 20px; letter-spacing: 2px; color: var(--accent-gold);">APEX-DHARMR87</strong>
+        </div>
+
+        <button class="primary-btn" onclick="triggerToast('🔗 Referral link copied to clipboard!')">
+          <i data-lucide="share-2" style="width: 15px; height: 15px;"></i> Share Invite Code
+        </button>
+      </section>
+
+    </div>
+
+    <!-- ================= FULLSCREEN LAYER: PROFILE ================= -->
+    <div class="profile-fullscreen-layer" id="profile-fullscreen-layer">
+      
+      <header class="profile-bar-header">
+        <button class="icon-btn" onclick="handleProfileBack()" title="Back">
+          <i data-lucide="chevron-left" style="width: 20px; height: 20px;"></i>
+        </button>
+        <h2 style="font-size: 16px; font-weight: 800;" id="profile-layer-title">My Profile</h2>
+        <div style="width: 38px;"></div>
+      </header>
+
+      <div class="profile-scroll-body" id="profile-subscreens-container">
+        
+        <!-- SUBVIEW 1: MAIN PROFILE MENU -->
+        <div id="subview-profile-main" style="display: flex; flex-direction: column; gap: 14px; position: relative;">
+          
+          <div style="background: var(--bg-surface-elevated); padding: 16px; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 12px; position: relative;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div class="user-avatar" style="width: 54px; height: 54px; font-size: 22px;" id="profile-card-avatar">D</div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="font-size: 16px; font-weight: 800;" id="profile-display-name">Dharmraj Rajput</span>
+                    <i data-lucide="badge-check" style="width: 17px; height: 17px; color: var(--accent-blue); fill: rgba(56, 189, 248, 0.2);"></i>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                    <i data-lucide="shield-check" style="width: 13px; height: 13px; color: var(--accent-green);"></i>
+                    <span style="font-size: 9.5px; color: var(--accent-green); font-weight: 800; letter-spacing: 0.5px;">100% VERIFIED ACCOUNT</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Three Dots Button -->
+              <button class="icon-btn" style="width: 32px; height: 32px; border-radius: 50%;" onclick="toggleProfileEditPopup(event)">
+                <i data-lucide="more-vertical" style="width: 17px; height: 17px;"></i>
+              </button>
+
+              <!-- Anchored Compact Edit Profile Pop-up -->
+              <div class="profile-edit-popup" id="profile-edit-popup" onclick="event.stopPropagation()">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 4px;">
+                  <span style="font-size: 11.5px; font-weight: 800;">Edit Profile</span>
+                  <button style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; display: flex; align-items: center;" onclick="closeProfileEditPopup()">
+                    <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+                  </button>
+                </div>
+
+                <div class="popup-input-item">
+                  <label>NAME</label>
+                  <input type="text" id="popup-profile-name" value="Dharmraj Rajput" readonly />
+                </div>
+
+                <div class="popup-input-item">
+                  <label>EMAIL</label>
+                  <input type="email" id="popup-profile-email" value="xyz@gmail.com" readonly />
+                </div>
+
+                <div style="display: flex; gap: 6px; margin-top: 2px;">
+                  <button class="primary-btn secondary-btn" style="padding: 6px 10px; font-size: 11px; flex: 1;" onclick="closeProfileEditPopup()">Cancel</button>
+                  <button class="primary-btn" style="padding: 6px 10px; font-size: 11px; flex: 1;" onclick="savePopupProfileChanges()">Save</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Links -->
+            <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border-subtle); padding-top: 10px;">
+              
+              <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); padding: 8px 12px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
+                  <div style="width: 14px; height: 14px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#fff" viewBox="0 0 16 16"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/></svg>
+                  </div>
+                  <div style="overflow: hidden;">
+                    <div style="font-size: 9px; color: var(--text-tertiary); font-weight: 700;">X (TWITTER)</div>
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                      <a href="https://x.com/idharmraj_" target="_blank" id="profile-display-x" style="font-size: 11px; font-weight: 800; font-family: 'JetBrains Mono', monospace; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; color: #fff; text-decoration: none;">@idharmraj_</a>
+                      <i data-lucide="badge-check" style="width: 13px; height: 13px; color: var(--accent-blue); fill: rgba(56, 189, 248, 0.2);"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); padding: 8px 12px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
+                  <div style="width: 14px; height: 14px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#e1306c" viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.036 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/></svg>
+                  </div>
+                  <div style="overflow: hidden;">
+                    <div style="font-size: 9px; color: var(--text-tertiary); font-weight: 700;">INSTAGRAM</div>
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                      <a href="https://instagram.com/idharmraj_" target="_blank" id="profile-display-ig" style="font-size: 11px; font-weight: 800; font-family: 'JetBrains Mono', monospace; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; color: #fff; text-decoration: none;">@idharmraj_</a>
+                      <i data-lucide="badge-check" style="width: 13px; height: 13px; color: var(--accent-blue); fill: rgba(56, 189, 248, 0.2);"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface); padding: 8px 12px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
+                  <div style="width: 14px; height: 14px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="#0088cc" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.577.298-.595.442-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294.26.006.549-.1.868-.32 2.179-1.471 3.304-2.214 3.374-2.23.05-.012.12-.026.166.016s.042.12.037.141c-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8.1 8.1 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629.093.06.183.125.27.187.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.4 1.4 0 0 0-.013-.315.34.34 0 0 0-.114-.217.53.53 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09z"/></svg>
+                  </div>
+                  <div style="overflow: hidden;">
+                    <div style="font-size: 9px; color: var(--text-tertiary); font-weight: 700;">TELEGRAM</div>
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                      <a href="https://t.me/idharmraj" target="_blank" id="profile-display-tg" style="font-size: 11px; font-weight: 800; font-family: 'JetBrains Mono', monospace; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; color: #fff; text-decoration: none;">@idharmraj</a>
+                      <i data-lucide="badge-check" style="width: 13px; height: 13px; color: var(--accent-blue); fill: rgba(56, 189, 248, 0.2);"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div>
+            <div style="margin-bottom: 6px;">
+              <span style="font-size: 11.5px; font-weight: 700; color: var(--text-secondary);" id="profile-stats-label">Fantasy Cricket Statistics</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; text-align: center;">
+                <div style="font-size: 10px; color: var(--text-tertiary); font-weight: 700;">MATCHES PLAYED</div>
+                <div style="font-size: 18px; font-weight: 800; margin-top: 2px;" id="stat-played">142</div>
+              </div>
+              <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; text-align: center;">
+                <div style="font-size: 10px; color: var(--text-tertiary); font-weight: 700;">MATCHES WON</div>
+                <div style="font-size: 18px; font-weight: 800; color: var(--accent-green); margin-top: 2px;" id="stat-won">98 (69%)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile Options List -->
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div class="list-tile" onclick="openProfileSubview('wallet')">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <i data-lucide="wallet" style="width: 16px; height: 16px; color: var(--accent-gold);"></i>
+                <span style="font-size: 12.5px; font-weight: 700;">Wallet</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 14px; height: 14px; color: var(--text-tertiary);"></i>
+            </div>
+
+            <div class="list-tile" onclick="openProfileSubview('transactions')">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <i data-lucide="arrow-left-right" style="width: 16px; height: 16px; color: var(--accent-green);"></i>
+                <span style="font-size: 12.5px; font-weight: 700;">Transaction History</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 14px; height: 14px; color: var(--text-tertiary);"></i>
+            </div>
+
+            <div class="list-tile" onclick="openProfileSubview('howtoplay')">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <i data-lucide="help-circle" style="width: 16px; height: 16px; color: var(--accent-blue);"></i>
+                <span style="font-size: 12.5px; font-weight: 700;" id="menu-label-howtoplay">How to Play & Points System</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 14px; height: 14px; color: var(--text-tertiary);"></i>
+            </div>
+
+            <div class="list-tile" onclick="openProfileSubview('terms')">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <i data-lucide="shield-check" style="width: 16px; height: 16px; color: var(--accent-purple);"></i>
+                <span style="font-size: 12.5px; font-weight: 700;">Terms & Conditions & Fair Play</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 14px; height: 14px; color: var(--text-tertiary);"></i>
+            </div>
+
+            <div class="list-tile" onclick="openProfileSubview('support')">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <i data-lucide="headphones" style="width: 16px; height: 16px; color: var(--accent-green);"></i>
+                <span style="font-size: 12.5px; font-weight: 700;">Help & Support</span>
+              </div>
+              <i data-lucide="chevron-right" style="width: 14px; height: 14px; color: var(--text-tertiary);"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBVIEW 2: FULLSCREEN WALLET -->
+        <div id="subview-profile-wallet" style="display: none; flex-direction: column; gap: 14px;">
+          <div style="background: linear-gradient(135deg, #2a2013 0%, #15110d 100%); border: 1.2px solid rgba(229,184,105,0.4); border-radius: var(--radius-lg); padding: 18px; text-align: center;">
+            <div style="font-size: 11px; color: var(--text-tertiary); font-weight: 700;">TOTAL WALLET BALANCE</div>
+            <div style="font-size: 32px; font-weight: 800; color: var(--accent-gold); font-family: 'JetBrains Mono', monospace; margin: 4px 0;" class="display-wallet-total">₹3,14,000.00</div>
+            <p style="font-size: 10px; color: var(--accent-green);">1 USDT / USDC = ₹95 INR • Instant Auto Settlement</p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+            <div style="background: var(--bg-surface-elevated); padding: 10px; border-radius: var(--radius-md); text-align: center;">
+              <div style="font-size: 9px; color: var(--text-tertiary);">DEPOSITED</div>
+              <div style="font-size: 12px; font-weight: 800;" class="display-wallet-deposit">₹13,500.00</div>
+            </div>
+            <div style="background: var(--bg-surface-elevated); padding: 10px; border-radius: var(--radius-md); text-align: center;">
+              <div style="font-size: 9px; color: var(--text-tertiary);">WINNINGS</div>
+              <div style="font-size: 12px; font-weight: 800; color: var(--accent-green);" class="display-wallet-winnings">₹3,00,000.00</div>
+            </div>
+            <div style="background: var(--bg-surface-elevated); padding: 10px; border-radius: var(--radius-md); text-align: center;">
+              <div style="font-size: 9px; color: var(--text-tertiary);">BONUS</div>
+              <div style="font-size: 12px; font-weight: 800; color: var(--accent-brand);" class="display-wallet-bonus">₹500.00</div>
+            </div>
+          </div>
+
+          <div class="wallet-action-row">
+            <button class="primary-btn" onclick="openDepositPage()">
+              <i data-lucide="arrow-down-left" style="width: 15px; height: 15px;"></i> Deposit
+            </button>
+            <button class="primary-btn secondary-btn" onclick="openWithdrawPage()">
+              <i data-lucide="arrow-up-right" style="width: 15px; height: 15px;"></i> Withdraw
+            </button>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 12px; font-weight: 800;">Verified Withdrawal Addresses</span>
+              <button class="primary-btn" style="width: auto; padding: 5px 12px; font-size: 10px;" onclick="openAddAddressModal()">+ Add New</button>
+            </div>
+
+            <div id="verified-addresses-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+          </div>
+        </div>
+
+        <!-- SUBVIEW 3: FULLSCREEN TRANSACTIONS -->
+        <div id="subview-profile-transactions" style="display: none; flex-direction: column; gap: 12px;">
+          <div class="filter-scroll-row">
+            <button class="tab-pill-btn active" id="tx-filter-all" onclick="filterTransactions('all')">All</button>
+            <button class="tab-pill-btn" id="tx-filter-deposit" onclick="filterTransactions('deposit')">Deposit</button>
+            <button class="tab-pill-btn" id="tx-filter-withdrawal" onclick="filterTransactions('withdrawal')">Withdrawal</button>
+            <button class="tab-pill-btn" id="tx-filter-winning" onclick="filterTransactions('winning')">Winning</button>
+            <button class="tab-pill-btn" id="tx-filter-spend" onclick="filterTransactions('spend')">Spend</button>
+            <button class="tab-pill-btn" id="tx-filter-bonus-spend" onclick="filterTransactions('bonus-spend')">Bonus Spend</button>
+            <button class="tab-pill-btn" id="tx-filter-bonus-received" onclick="filterTransactions('bonus-received')">Bonus Receive</button>
+          </div>
+
+          <div id="tx-screen-list-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+
+        <!-- SUBVIEW 5: FULLSCREEN HOW TO PLAY & POINT SYSTEM -->
+        <div id="subview-profile-howtoplay" style="display: none; flex-direction: column; gap: 14px;">
+          <div id="howtoplay-fullscreen-content" style="font-size: 12px; color: var(--text-secondary); line-height: 1.6; display: flex; flex-direction: column; gap: 12px;"></div>
+        </div>
+
+        <!-- SUBVIEW 6: FULLSCREEN TERMS & CONDITIONS -->
+        <div id="subview-profile-terms" style="display: none; flex-direction: column; gap: 14px;">
+          <div id="terms-fullscreen-content" style="font-size: 12px; color: var(--text-secondary); line-height: 1.6; display: flex; flex-direction: column; gap: 12px;"></div>
+        </div>
+
+        <!-- SUBVIEW 7: FULLSCREEN HELP & SUPPORT -->
+        <div id="subview-profile-support" style="display: none; flex-direction: column; gap: 14px;">
+          <p style="font-size: 11.5px; color: var(--text-secondary);">
+            Need assistance with contests, deposits, or withdrawals? Our support desk is open 24/7.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="list-tile" onclick="openProfileSubview('live-chat')">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(56, 189, 248, 0.15); display: flex; align-items: center; justify-content: center;">
+                  <i data-lucide="message-square" style="width: 18px; height: 18px; color: var(--accent-blue);"></i>
+                </div>
+                <div>
+                  <div style="font-size: 12.5px; font-weight: 700;">Live Chat (Open New Ticket)</div>
+                  <div style="font-size: 10px; color: var(--text-tertiary);">Direct connection with specialist agent</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" style="width: 14px; height: 14px; color: var(--text-tertiary);"></i>
+            </div>
+
+            <div class="list-tile" onclick="openProfileSubview('chat-history')">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center;">
+                  <i data-lucide="history" style="width: 18px; height: 18px; color: var(--accent-green);"></i>
+                </div>
+                <div>
+                  <div style="font-size: 12.5px; font-weight: 700;">Chat History</div>
+                  <div style="font-size: 10px; color: var(--text-tertiary);">View ongoing, solved, and unsolved tickets</div>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" style="width: 14px; height: 14px; color: var(--text-tertiary);"></i>
+            </div>
+          </div>
+
+          <span style="font-size: 13px; font-weight: 800; margin-top: 6px;">Frequently Asked Questions (FAQ)</span>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="faq-card" onclick="toggleFaqCard(this)">
+              <div class="faq-header">
+                <span>How to deposit in Apex Gaming?</span>
+                <i data-lucide="chevron-down" style="width: 16px; height: 16px;" class="faq-icon"></i>
+              </div>
+              <div class="faq-body">
+                Go to Wallet > Click <strong>Deposit</strong>. Choose your network (USDT on TRC20, BEP20, ERC20, Arbitrum or USDC on Base, Arbitrum, ERC20). Send crypto to the designated wallet address. Your wallet is automatically credited in INR at the guaranteed conversion rate of <strong>1 USDT / USDC = ₹95 INR</strong> with zero processing fees.
+              </div>
+            </div>
+
+            <div class="faq-card" onclick="toggleFaqCard(this)">
+              <div class="faq-header">
+                <span>How to withdraw winnings?</span>
+                <i data-lucide="chevron-down" style="width: 16px; height: 16px;" class="faq-icon"></i>
+              </div>
+              <div class="faq-body">
+                Open Wallet > Click <strong>Withdraw</strong>. Enter the withdrawal amount in INR (minimum ₹1,900) and choose your verified crypto destination address. Winnings are converted at 1 USDT = ₹95 INR and dispatched directly to your wallet on-chain.
+              </div>
+            </div>
+
+            <div class="faq-card" onclick="toggleFaqCard(this)">
+              <div class="faq-header">
+                <span>How to buy crypto safely?</span>
+                <i data-lucide="chevron-down" style="width: 16px; height: 16px;" class="faq-icon"></i>
+              </div>
+              <div class="faq-body">
+                You can easily purchase USDT or USDC through trusted platforms such as Binance, Bybit, or Onramp using UPI or IMPS.
+                <div style="margin-top: 8px; border-radius: 10px; overflow: hidden;">
+                  <iframe width="100%" height="190" src="https://www.youtube-nocookie.com/embed/aircAruvnKk" title="How to buy crypto" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 8px; display: block;"></iframe>
+                </div>
+                <p style="font-size: 11px; color: var(--accent-gold); font-weight: 800; margin-top: 6px;">Note: Watch this video</p>
+              </div>
+            </div>
+
+            <div class="faq-card" onclick="toggleFaqCard(this)">
+              <div class="faq-header">
+                <span>How to sell crypto without bank freeze?</span>
+                <i data-lucide="chevron-down" style="width: 16px; height: 16px;" class="faq-icon"></i>
+              </div>
+              <div class="faq-body">
+                To prevent bank freeze issues during P2P crypto selling, always transact only with verified merchants with >98% completion rates, verify the payer name matches their registered KYC name, and avoid suspicious transaction remarks.
+                <div style="margin-top: 8px; border-radius: 10px; overflow: hidden;">
+                  <iframe width="100%" height="190" src="https://www.youtube-nocookie.com/embed/aircAruvnKk" title="How to sell crypto without bank freeze" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 8px; display: block;"></iframe>
+                </div>
+                <p style="font-size: 11px; color: var(--accent-gold); font-weight: 800; margin-top: 6px;">Note: Watch this video</p>
+              </div>
+            </div>
+
+            <div class="faq-card" onclick="toggleFaqCard(this)">
+              <div class="faq-header">
+                <span>Does Apex Gaming cut tax or TDS on winnings & deposits?</span>
+                <i data-lucide="chevron-down" style="width: 16px; height: 16px;" class="faq-icon"></i>
+              </div>
+              <div class="faq-body" style="color: var(--accent-green); font-weight: 700;">
+                No, we do not cut any type of tax or TDS. You get 100% of your winning amount directly into your wallet without deductions.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SUBVIEW 8: LIVE CHAT (NEW TICKET) -->
+        <div id="subview-profile-live-chat" style="display: none; flex-direction: column; height: 100%; min-height: 480px; gap: 12px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 4px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="icon-btn" onclick="openProfileSubview('support')"><i data-lucide="chevron-left" style="width: 18px; height: 18px;"></i></button>
+              <div>
+                <div style="font-size: 13px; font-weight: 800;">Live Support Desk</div>
+                <div style="font-size: 9.5px; color: var(--accent-green); font-weight: 700;">● Active Specialist Online</div>
+              </div>
+            </div>
+            <span style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--accent-gold); background: rgba(229,184,105,0.12); padding: 3px 8px; border-radius: 4px;">NEW TICKET</span>
+          </div>
+
+          <div class="chat-container" id="live-chat-messages">
+            <div class="chat-bubble chat-agent">
+              Hello Dharmraj! Welcome to Apex Gaming 24/7 Live Support. How can we help you today with your deposits or fantasy contests?
+            </div>
+            <div class="chat-bubble chat-agent">
+              Our specialists reply instantly. Please describe your issue below:
+            </div>
+          </div>
+
+          <div class="chat-input-bar">
+            <input type="text" id="chat-live-user-input" placeholder="Describe your query..." style="flex: 1; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); padding: 11px 14px; border-radius: var(--radius-full); color: #fff; font-size: 12px; outline: none;" onkeydown="if(event.key==='Enter') sendLiveChatMessage()" />
+            <button class="primary-btn" style="width: auto; padding: 11px 18px; border-radius: var(--radius-full);" onclick="sendLiveChatMessage()">
+              <i data-lucide="send" style="width: 15px; height: 15px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- SUBVIEW 9: CHAT HISTORY -->
+        <div id="subview-profile-chat-history" style="display: none; flex-direction: column; gap: 12px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 4px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="icon-btn" onclick="openProfileSubview('support')"><i data-lucide="chevron-left" style="width: 18px; height: 18px;"></i></button>
+              <div>
+                <div style="font-size: 13px; font-weight: 800;">Ticket & Chat History</div>
+                <div style="font-size: 9.5px; color: var(--text-tertiary);">Track all your support requests</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;" id="chat-history-container">
+            
+            <div class="match-card" style="padding: 12px; border-color: rgba(56, 189, 248, 0.3);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 9.5px; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.15); padding: 2px 7px; border-radius: 4px;">● ONGOING</span>
+                <span style="font-size: 9.5px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace;">TICKET #9042</span>
+              </div>
+              <div style="font-size: 12.5px; font-weight: 800; margin-top: 4px;">USDT TRC20 Deposit Delay</div>
+              <div style="font-size: 10.5px; color: var(--text-secondary); margin-top: 2px;">Agent #104: "We are currently checking the TXID on TRON blockchain."</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; border-top: 1px solid var(--border-subtle); padding-top: 6px; font-size: 10px; color: var(--text-tertiary);">
+                <span>Updated 15 mins ago</span>
+                <span style="color: var(--accent-gold); font-weight: 700; cursor: pointer;" onclick="openProfileSubview('live-chat')">Open Thread →</span>
+              </div>
+            </div>
+
+            <div class="match-card" style="padding: 12px; border-color: rgba(16, 185, 129, 0.3);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 9.5px; font-weight: 800; color: var(--accent-green); background: rgba(16, 185, 129, 0.15); padding: 2px 7px; border-radius: 4px;">✓ SOLVED</span>
+                <span style="font-size: 9.5px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace;">TICKET #8402</span>
+              </div>
+              <div style="font-size: 12.5px; font-weight: 800; margin-top: 4px;">Withdrawal Cooldown Inquiry</div>
+              <div style="font-size: 10.5px; color: var(--text-secondary); margin-top: 2px;">Resolved: Security cooldown period expired and ₹1,900 payout sent.</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; border-top: 1px solid var(--border-subtle); padding-top: 6px; font-size: 10px; color: var(--text-tertiary);">
+                <span>Closed on 28 Aug</span>
+                <span style="color: var(--accent-green); font-weight: 700;">Resolved</span>
+              </div>
+            </div>
+
+            <div class="match-card" style="padding: 12px; border-color: rgba(16, 185, 129, 0.3);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 9.5px; font-weight: 800; color: var(--accent-green); background: rgba(16, 185, 129, 0.15); padding: 2px 7px; border-radius: 4px;">✓ SOLVED</span>
+                <span style="font-size: 9.5px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace;">TICKET #8119</span>
+              </div>
+              <div style="font-size: 12.5px; font-weight: 800; margin-top: 4px;">Referral Bonus Not Credited</div>
+              <div style="font-size: 10.5px; color: var(--text-secondary); margin-top: 2px;">Resolved: Friend completed first qualifying deposit, ₹250 bonus added.</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; border-top: 1px solid var(--border-subtle); padding-top: 6px; font-size: 10px; color: var(--text-tertiary);">
+                <span>Closed on 20 Aug</span>
+                <span style="color: var(--accent-green); font-weight: 700;">Resolved</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav" id="dynamic-nav"></nav>
+
+    <!-- ================= MODAL: HOME SCREEN WALLET POPUP ================= -->
+    <div class="modal-overlay" id="wallet-modal-popup" onclick="closeModalOnBackdrop(event)">
+      <div class="modal-sheet">
+        <div class="modal-drag"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="font-size: 16px; font-weight: 800;">Wallet</h3>
+          <button class="icon-btn" onclick="closeModal('wallet-modal-popup')"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #2a2013 0%, #15110d 100%); border: 1.2px solid rgba(229,184,105,0.4); border-radius: var(--radius-lg); padding: 16px; text-align: center;">
+          <div style="font-size: 10.5px; color: var(--text-tertiary); font-weight: 700;">TOTAL WALLET BALANCE</div>
+          <div style="font-size: 30px; font-weight: 800; color: var(--accent-gold); font-family: 'JetBrains Mono', monospace; margin: 4px 0;" class="display-wallet-total">₹3,14,000.00</div>
+          <p style="font-size: 10px; color: var(--accent-green);">1 USDT / USDC = ₹95 INR • Instant Auto Settlement</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+          <div style="background: var(--bg-surface-elevated); padding: 8px; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 9px; color: var(--text-tertiary);">DEPOSITED</div>
+            <div style="font-size: 11.5px; font-weight: 800;" class="display-wallet-deposit">₹13,500.00</div>
+          </div>
+          <div style="background: var(--bg-surface-elevated); padding: 8px; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 9px; color: var(--text-tertiary);">WINNINGS</div>
+            <div style="font-size: 11.5px; font-weight: 800; color: var(--accent-green);" class="display-wallet-winnings">₹3,00,000.00</div>
+          </div>
+          <div style="background: var(--bg-surface-elevated); padding: 8px; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 9px; color: var(--text-tertiary);">BONUS</div>
+            <div style="font-size: 11.5px; font-weight: 800; color: var(--accent-brand);" class="display-wallet-bonus">₹500.00</div>
+          </div>
+        </div>
+
+        <div class="wallet-action-row">
+          <button class="primary-btn" onclick="closeModal('wallet-modal-popup'); openDepositPage();">
+            <i data-lucide="arrow-down-left" style="width: 15px; height: 15px;"></i> Deposit
+          </button>
+          <button class="primary-btn secondary-btn" onclick="closeModal('wallet-modal-popup'); openWithdrawPage();">
+            <i data-lucide="arrow-up-right" style="width: 15px; height: 15px;"></i> Withdraw
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MODAL: DEPOSIT ================= -->
+    <div class="modal-overlay" id="deposit-modal" onclick="closeModalOnBackdrop(event)">
+      <div class="modal-sheet">
+        <div class="modal-drag"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <span style="font-size: 9.5px; font-weight: 800; color: var(--accent-green);">INSTANT CONVERSION</span>
+            <h3 style="font-size: 16px; font-weight: 800;">Deposit via USDT / USDC</h3>
+          </div>
+          <button class="icon-btn" onclick="closeModal('deposit-modal')"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button>
+        </div>
+
+        <p style="font-size: 11px; color: var(--text-secondary);">
+          Fixed Conversion: <strong>1 USDT / USDC = ₹95 INR</strong><br>
+          Supported Networks: <strong>USDT (TRC20, BEP20, ERC20, Arbitrum) • USDC (Base, Arbitrum, ERC20)</strong>
+        </p>
+
+        <div class="input-box">
+          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">SELECT DEPOSIT NETWORK</span>
+          <select id="deposit-token-select" class="network-select">
+            <option value="USDT (TRC20)">USDT (TRC20)</option>
+            <option value="USDT (BEP20)">USDT (BEP20)</option>
+            <option value="USDT (ERC20)">USDT (ERC20)</option>
+            <option value="USDT (Arbitrum)">USDT (Arbitrum)</option>
+            <option value="USDC (Base)">USDC (Base)</option>
+            <option value="USDC (Arbitrum)">USDC (Arbitrum)</option>
+            <option value="USDC (ERC20)">USDC (ERC20)</option>
+          </select>
+        </div>
+
+        <div class="input-box">
+          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">ENTER AMOUNT</span>
+          <input type="number" id="deposit-crypto-input" value="20" oninput="calculateDepositConversion()" />
+        </div>
+
+        <div class="crypto-conversion-badge">
+          <span>You Will Receive in Wallet:</span>
+          <strong style="font-size: 14px; color: #fff;" id="deposit-inr-result">₹1,900 INR</strong>
+        </div>
+
+        <button class="primary-btn" onclick="executeCryptoDeposit()">Deposit & Credit Wallet</button>
+      </div>
+    </div>
+
+    <!-- ================= MODAL: WITHDRAW ================= -->
+    <div class="modal-overlay" id="withdraw-modal" onclick="closeModalOnBackdrop(event)">
+      <div class="modal-sheet">
+        <div class="modal-drag"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <span style="font-size: 9.5px; font-weight: 800; color: var(--accent-brand);">VERIFIED PAYOUT</span>
+            <h3 style="font-size: 16px; font-weight: 800;">Withdraw to USDT / USDC</h3>
+          </div>
+          <button class="icon-btn" onclick="closeModal('withdraw-modal')"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button>
+        </div>
+
+        <p style="font-size: 11px; color: var(--text-secondary);">
+          Fixed Conversion: <strong>1 USDT / USDC = ₹95 INR</strong> (Min ₹1,900)<br>
+          Withdrawals are locked strictly to your verified crypto deposit addresses.
+        </p>
+
+        <div class="input-box">
+          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">ENTER WITHDRAWAL AMOUNT (INR)</span>
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <input type="number" id="withdraw-inr-input" value="1900" oninput="calculateWithdrawConversion()" />
+            <span style="font-size: 14px; font-weight: 800; color: var(--accent-gold);">INR (₹)</span>
+          </div>
+        </div>
+
+        <div class="input-box">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">DESTINATION VERIFIED WALLET</span>
+            <div style="display: flex; align-items: center; gap: 4px; font-size: 9.5px; font-weight: 800; color: var(--accent-green);">
+              <i data-lucide="check-circle-2" style="width: 12px; height: 12px;"></i>
+              <span>VERIFIED ONLY</span>
+            </div>
+          </div>
+          <select id="withdraw-verified-select" class="network-select"></select>
+        </div>
+
+        <div class="crypto-conversion-badge">
+          <span>You Will Receive in Crypto:</span>
+          <strong style="font-size: 14px; color: #fff;" id="withdraw-crypto-result">20.00 USDT</strong>
+        </div>
+
+        <button class="primary-btn" onclick="executeCryptoWithdraw()">Request Instant Withdrawal</button>
+      </div>
+    </div>
+
+    <!-- ================= MODAL: ADD NEW ADDRESS ================= -->
+    <div class="modal-overlay" id="add-address-modal" onclick="closeModalOnBackdrop(event)">
+      <div class="modal-sheet">
+        <div class="modal-drag"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <span style="font-size: 9.5px; font-weight: 800; color: var(--accent-gold);">VERIFIED WITHDRAWAL</span>
+            <h3 style="font-size: 16px; font-weight: 800;">Add New Address</h3>
+          </div>
+          <button class="icon-btn" onclick="closeModal('add-address-modal')"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button>
+        </div>
+
+        <div class="input-box">
+          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">ENTER TITLE</span>
+          <input type="text" id="new-address-title" placeholder="e.g. Binance Wallet, TrustWallet" />
+        </div>
+
+        <div class="input-box">
+          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">SELECT NETWORK</span>
+          <select id="new-address-network" class="network-select">
+            <option value="USDT (TRC20)">USDT (TRC20)</option>
+            <option value="USDT (BEP20)">USDT (BEP20)</option>
+            <option value="USDT (ERC20)">USDT (ERC20)</option>
+            <option value="USDT (Arbitrum)">USDT (Arbitrum)</option>
+            <option value="USDC (Base)">USDC (Base)</option>
+            <option value="USDC (Arbitrum)">USDC (Arbitrum)</option>
+            <option value="USDC (ERC20)">USDC (ERC20)</option>
+          </select>
+        </div>
+
+        <div class="input-box">
+          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">ENTER ADDRESS</span>
+          <input type="text" id="new-address-input" placeholder="Paste your crypto wallet address" />
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <button class="primary-btn secondary-btn" style="flex: 1;" onclick="closeModal('add-address-modal')">Cancel</button>
+          <button class="primary-btn" style="flex: 1;" onclick="confirmAddNewAddress()">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MODAL: IN-UI ADDRESS REMOVAL CONFIRMATION ================= -->
+    <div class="modal-overlay" id="address-remove-confirm-modal" onclick="closeModalOnBackdrop(event)">
+      <div class="modal-sheet" style="text-align: center; gap: 14px;">
+        <div class="modal-drag"></div>
+        <div style="width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 82, 82, 0.15); display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+          <i data-lucide="trash-2" style="width: 24px; height: 24px; color: var(--accent-red);"></i>
+        </div>
+        <div>
+          <h3 style="font-size: 17px; font-weight: 800;">Remove Address?</h3>
+          <p style="font-size: 11.5px; color: var(--text-secondary); margin-top: 4px;" id="address-remove-modal-desc">
+            Are you sure you want to remove this address?
+          </p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="primary-btn secondary-btn" style="flex: 1;" onclick="closeModal('address-remove-confirm-modal')">Cancel</button>
+          <button class="primary-btn" style="flex: 1; background: var(--accent-red); color: #fff;" onclick="executeConfirmedAddressRemove()">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Application State
+    let appState = {
+      addressToRemoveIndex: null,
+      activeTab: 'home',
+      currentMatchesTab: 'upcoming',
+      currentTxFilter: 'all',
+      activeProfileSubview: 'main',
+      winnersTab: 'top',
+      currentContestCategory: 'all',
+      selectedMatch: null,
+      userProfile: {
+        name: 'Dharmraj Rajput',
+        email: 'xyz@gmail.com',
+        x: '@idharmraj_',
+        instagram: '@idharmraj_',
+        telegram: '@idharmraj'
+      },
+      carouselIndices: {
+        'home': 0,
+        'cricket-winners': 0
+      },
+      wallet: {
+        total: 314000.00,
+        deposit: 13500.00,
+        winnings: 300000.00,
+        bonus: 500.00
+      },
+      stats: {
+        played: 142,
+        won: 98
+      },
+      verifiedWallets: [
+        { id: 1, label: 'Binance (USDT TRC20)', address: 'TX9QeZ7...4kL9wR', network: 'USDT (TRC20)', isCooldown: false },
+        { id: 2, label: 'TrustWallet (USDC Base)', address: '7F1aKp2...B83vLm', network: 'USDC (Base)', isCooldown: false }
+      ],
+      contestsDatabase: [
+        { category: 'mega', title: 'Mega Contest Pool', pool: '₹60,00,000', firstPrize: '₹10 Lakh', entry: 49, spotsLeft: '1,42,000 spots left', totalSpots: '2,00,000 spots', percent: '71%', bonus: '15% Bonus' },
+        { category: 'mega', title: 'Mini Mega Championship', pool: '₹15,00,000', firstPrize: '₹3 Lakh', entry: 29, spotsLeft: '45,210 spots left', totalSpots: '75,000 spots', percent: '60%', bonus: '10% Bonus' },
+        { category: 'h2h', title: 'Head-to-Head 1v1 Clash', pool: '₹1,000', firstPrize: '₹1,000', entry: 575, spotsLeft: '1 spot left', totalSpots: '2 spots', percent: '50%', bonus: 'Single Winner' },
+        { category: 'h2h', title: 'Head-to-Head Double Up', pool: '₹350', firstPrize: '₹350', entry: 199, spotsLeft: '1 spot left', totalSpots: '2 spots', percent: '50%', bonus: 'Single Winner' },
+        { category: 'mini', title: 'Winner Takes All 4-Way', pool: '₹670', firstPrize: '₹670', entry: 179, spotsLeft: '2 spots left', totalSpots: '4 spots', percent: '50%', bonus: 'Single Winner' },
+        { category: 'mini', title: '7-Spot Multiplier Battle', pool: '₹1,400', firstPrize: '₹700', entry: 220, spotsLeft: '3 spots left', totalSpots: '7 spots', percent: '57%', bonus: 'Top 2 Win' },
+        { category: 'winner-takes-all', title: 'Grand Winner Takes All', pool: '₹21,000', firstPrize: '₹21,000', entry: 125, spotsLeft: '84 spots left', totalSpots: '200 spots', percent: '58%', bonus: 'Rank 1 Takes All' },
+        { category: 'winner-takes-all', title: 'High Stakes WTA 10-Spot', pool: '₹10,000', firstPrize: '₹10,000', entry: 1100, spotsLeft: '4 spots left', totalSpots: '10 spots', percent: '60%', bonus: 'Rank 1 Takes All' }
+      ],
+      winners: {
+        top: [
+          { rank: '🥇', name: 'Vikram***92', subtitle: 'Series Cumulative Top Rank', prize: '₹12.5 Lakh' },
+          { rank: '🥈', name: 'Aman_Sharma', subtitle: '942 Total Fantasy Points', prize: '₹8.0 Lakh' },
+          { rank: '🥉', name: 'CricketBoss77', subtitle: '918 Total Fantasy Points', prize: '₹4.5 Lakh' },
+          { rank: '#4', name: 'Kapil_Strike', subtitle: '886 Total Fantasy Points', prize: '₹2.0 Lakh' },
+          { rank: '#5', name: 'RohitFanClub', subtitle: '864 Total Fantasy Points', prize: '₹1.0 Lakh' }
+        ],
+        latest: [
+          { rank: '⚡', name: 'Mohit_T20', subtitle: 'IND vs AUS Mega Contest • 12m ago', prize: '₹1,50,000' },
+          { rank: '⚡', name: 'Deepak_XI', subtitle: 'ENG vs RSA ODI Pool • 45m ago', prize: '₹85,000' },
+          { rank: '⚡', name: 'CaptainKohli18', subtitle: 'IND vs AUS Mini League • 1h ago', prize: '₹50,000' },
+          { rank: '⚡', name: 'Shivam_Fast', subtitle: 'Super T20 Qualifier • 2h ago', prize: '₹25,000' }
+        ]
+      },
+      transactions: [
+        { category: 'winning', type: 'IND vs ENG 3rd T20 Rank #1', amount: '+₹1,50,000.00', date: 'Yesterday, 11:45 PM', status: 'Winnings Credited' },
+        { category: 'winning', type: 'RSA vs AUS 1st ODI Rank #1', amount: '+₹1,50,000.00', date: '28 Aug, 10:30 PM', status: 'Winnings Credited' },
+        { category: 'deposit', type: 'Deposit (USDT TRC20)', amount: '+₹19,000.00', date: '03 Sep, 9:15 AM', status: 'Credited (200 USDT)' },
+        { category: 'spend', type: 'IND vs AUS Mega T20 Entry', amount: '-₹49.00', date: '02 Sep, 6:30 PM', status: 'Contest Entry' },
+        { category: 'bonus-received', type: 'Welcome Sign-up Bonus', amount: '+₹250.00', date: '01 Sep, 10:00 AM', status: 'Bonus Credited' },
+        { category: 'bonus-spend', type: 'Bonus Deducted (15% on IND vs AUS)', amount: '-₹7.35', date: '02 Sep, 6:30 PM', status: 'Bonus Used' },
+        { category: 'spend', type: 'ENG vs RSA ODI Entry', amount: '-₹35.00', date: '31 Aug, 5:40 PM', status: 'Contest Entry' },
+        { category: 'withdrawal', type: 'Withdrawal (USDT BEP20)', amount: '-₹1,900.00', date: '30 Aug, 4:15 PM', status: 'Dispatched (20 USDT)' },
+        { category: 'bonus-received', type: 'IPL Early Bird Bonus Reward', amount: '+₹250.00', date: '29 Aug, 2:10 PM', status: 'Bonus Credited' }
+      ]
+    };
+
+    // Navigation Updates
+    function updateNav() {
+      const nav = document.getElementById('dynamic-nav');
+      nav.innerHTML = `
+        <button class="nav-btn ${appState.activeTab === 'home' ? 'active' : ''}" onclick="switchView('cricket-home', 'home')">
+          <i data-lucide="home" style="width: 18px; height: 18px;"></i>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-btn ${appState.activeTab === 'matches' ? 'active' : ''}" onclick="switchView('cricket-matches', 'matches')">
+          <i data-lucide="trophy" style="width: 18px; height: 18px;"></i>
+          <span class="nav-label">Matches</span>
+        </button>
+        <button class="nav-btn ${appState.activeTab === 'winners' ? 'active' : ''}" onclick="switchView('cricket-winners', 'winners')">
+          <i data-lucide="crown" style="width: 18px; height: 18px;"></i>
+          <span class="nav-label">Winners</span>
+        </button>
+        <button class="nav-btn ${appState.activeTab === 'refer' ? 'active' : ''}" onclick="switchView('refer-earn', 'refer')">
+          <i data-lucide="gift" style="width: 18px; height: 18px;"></i>
+          <span class="nav-label">Refer & Earn</span>
+        </button>
+      `;
+      lucide.createIcons();
+    }
+
+    function switchView(screenId, tabName) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(`view-${screenId}`);
+      if (target) target.classList.add('active');
+      appState.activeTab = tabName;
+      updateNav();
+
+      if (screenId === 'cricket-matches') {
+        filterMatchesTab(appState.currentMatchesTab);
+      } else if (screenId === 'cricket-winners') {
+        renderWinners();
+      }
+    }
+
+    // Carousel Slider Engine
+    function jumpCarouselSlide(carouselName, index) {
+      const track = document.getElementById(
+        carouselName === 'home' ? 'home-carousel-track' : 'cricket-winners-carousel-track'
+      );
+      const dotsRow = document.getElementById(
+        carouselName === 'home' ? 'home-carousel-dots' : 'cricket-winners-dots'
+      );
+
+      if (!track || !dotsRow) return;
+
+      const totalSlides = track.children.length;
+      appState.carouselIndices[carouselName] = (index + totalSlides) % totalSlides;
+      const targetIdx = appState.carouselIndices[carouselName];
+
+      track.style.transform = `translate3d(-${targetIdx * 100}%, 0, 0)`;
+
+      const dots = dotsRow.querySelectorAll('.carousel-dot');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === targetIdx);
+      });
+    }
+
+    function initCarouselTouchSwipe(containerId, trackId, carouselName) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      let startX = 0;
+      let startY = 0;
+      let startTime = 0;
+
+      container.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        startTime = Date.now();
+      }, { passive: true });
+
+      container.addEventListener('touchend', (e) => {
+        const deltaX = e.changedTouches[0].clientX - startX;
+        const deltaY = e.changedTouches[0].clientY - startY;
+        const duration = Date.now() - startTime;
+
+        if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2 && duration < 600) {
+          if (deltaX < 0) {
+            jumpCarouselSlide(carouselName, appState.carouselIndices[carouselName] + 1);
+          } else {
+            jumpCarouselSlide(carouselName, appState.carouselIndices[carouselName] - 1);
+          }
+        }
+      }, { passive: true });
+    }
+
+    // Match Contests Catalog Management
+    function openMatchContests(matchTitle, team1, team2, time) {
+      appState.selectedMatch = { title: matchTitle, team1, team2, time };
+      document.getElementById('contest-screen-match-title').textContent = `${team1} vs ${team2}`;
+      document.getElementById('contest-screen-time').textContent = time;
+
+      filterContestCategories('all');
+      switchView('match-contests', 'home');
+    }
+
+    function filterContestCategories(category) {
+      appState.currentContestCategory = category;
+      document.querySelectorAll('#view-match-contests .tab-pill-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`contest-filter-${category}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const container = document.getElementById('contests-catalog-container');
+      container.innerHTML = '';
+
+      let list = appState.contestsDatabase;
+      if (category !== 'all') {
+        list = list.filter(c => c.category === category);
+      }
+
+      list.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'contest-card';
+        card.innerHTML = `
+          <div class="contest-header">
+            <div>
+              <span style="font-size: 10px; color: var(--text-tertiary); font-weight: 700; text-transform: uppercase;">${c.title}</span>
+              <div class="contest-pool">${c.pool}</div>
+            </div>
+            <button class="contest-entry-btn" onclick="joinFantasyContest('${c.title}', ${c.entry})">
+              ₹${c.entry}
+            </button>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: ${c.percent};"></div>
+            </div>
+            <div style="display: space-between; font-size: 10px; color: var(--text-tertiary); font-weight: 700;">
+              <span style="color: var(--accent-gold);">${c.spotsLeft}</span>
+              <span>${c.totalSpots}</span>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 8px; font-size: 10px; color: var(--text-secondary);">
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <i data-lucide="trophy" style="width: 12px; height: 12px; color: var(--accent-gold);"></i>
+              <span>1st: <strong>${c.firstPrize}</strong></span>
+            </div>
+            <span style="background: rgba(229,184,105,0.12); color: var(--accent-gold); padding: 2px 6px; border-radius: 4px; font-weight: 800;">${c.bonus}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    // Matches Screen Working Tabs
+    function filterMatchesTab(type) {
+      appState.currentMatchesTab = type;
+      document.querySelectorAll('#view-cricket-matches .tab-pill-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-matches-${type}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const container = document.getElementById('matches-tab-content');
+      container.innerHTML = '';
+
+      if (type === 'upcoming') {
+        container.innerHTML = `
+          <div class="match-card" onclick="openMatchContests('IND vs AUS T20', 'IND', 'AUS', 'Starts in 18m')">
+            <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
+              <span>T20 International Cup</span>
+              <span style="color: var(--accent-brand); font-weight: 700;">● Starts in 18m</span>
+            </div>
+            <div class="match-teams-row">
+              <span style="font-size: 13.5px; font-weight: 800;">IND vs AUS (T20)</span>
+              <span style="font-size: 11px; font-weight: 800; color: var(--accent-gold);">View Contests →</span>
+            </div>
+            <div class="match-footer">
+              <span style="color: var(--accent-green); font-weight: 800;">Prize Pool: ₹2.5 Cr</span>
+              <span style="font-weight: 700; color: var(--text-secondary);">From ₹49</span>
+            </div>
+          </div>
+
+          <div class="match-card" onclick="openMatchContests('ENG vs RSA ODI', 'ENG', 'RSA', 'Today, 7:30 PM')">
+            <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
+              <span>ODI World Series</span>
+              <span style="color: var(--accent-gold); font-weight: 700;">Today, 7:30 PM</span>
+            </div>
+            <div class="match-teams-row">
+              <span style="font-size: 13.5px; font-weight: 800;">ENG vs RSA (ODI)</span>
+              <span style="font-size: 11px; font-weight: 800; color: var(--accent-gold);">View Contests →</span>
+            </div>
+            <div class="match-footer">
+              <span style="color: var(--accent-green); font-weight: 800;">Prize Pool: ₹85 Lakh</span>
+              <span style="font-weight: 700; color: var(--text-secondary);">From ₹35</span>
+            </div>
+          </div>
+
+          <div class="match-card" onclick="openMatchContests('DB vs NW T10', 'DB', 'NW', 'Tomorrow, 4:00 PM')">
+            <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
+              <span style="color: var(--accent-purple); font-weight: 800;">Abu Dhabi T10 League</span>
+              <span style="color: var(--accent-gold); font-weight: 700;">Tomorrow, 4:00 PM</span>
+            </div>
+            <div class="match-teams-row">
+              <span style="font-size: 13.5px; font-weight: 800;">DB vs NW (T10)</span>
+              <span style="font-size: 11px; font-weight: 800; color: var(--accent-gold);">View Contests →</span>
+            </div>
+            <div class="match-footer">
+              <span style="color: var(--accent-green); font-weight: 800;">Prize Pool: ₹35 Lakh</span>
+              <span style="font-weight: 700; color: var(--text-secondary);">From ₹29</span>
+            </div>
+          </div>
+
+          <div class="match-card" onclick="openMatchContests('IND vs ENG 1st Test', 'IND', 'ENG', 'Starts Friday, 9:30 AM')">
+            <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
+              <span style="color: var(--accent-blue); font-weight: 800;">ICC World Test Championship</span>
+              <span style="color: var(--accent-blue); font-weight: 700;">Fri, 9:30 AM</span>
+            </div>
+            <div class="match-teams-row">
+              <span style="font-size: 13.5px; font-weight: 800;">IND vs ENG (5-Day Test)</span>
+              <span style="font-size: 11px; font-weight: 800; color: var(--accent-gold);">View Contests →</span>
+            </div>
+            <div class="match-footer">
+              <span style="color: var(--accent-green); font-weight: 800;">Prize Pool: ₹1.5 Cr</span>
+              <span style="font-weight: 700; color: var(--text-secondary);">From ₹39</span>
+            </div>
+          </div>
+        `;
+      } else if (type === 'live') {
+        container.innerHTML = `
+          <div class="match-card">
+            <div style="display: flex; justify-content: space-between; font-size: 10.5px;">
+              <span style="color: var(--accent-green); font-weight: 800;">● LIVE • 14.2 Overs</span>
+              <span style="color: var(--accent-gold); font-weight: 800;">Rank #14 / 24,000</span>
+            </div>
+            <div class="match-teams-row">
+              <span style="font-size: 13.5px; font-weight: 800;">IND (142/3) vs AUS</span>
+              <span style="font-size: 12px; font-weight: 800; color: var(--accent-green);">PTS: 482.5</span>
+            </div>
+            <p style="font-size: 10px; color: var(--text-tertiary);">Team 1 • Captain: V. Kohli (88 pts)</p>
+            <button class="primary-btn" style="padding: 6px; font-size: 11px; background: var(--bg-surface-hover); color: #fff;" onclick="triggerToast('Opening Live Ball-By-Ball Leaderboard')">
+              Live Scorecard & Rank
+            </button>
+          </div>
+          <div class="match-card">
+            <div style="display: flex; justify-content: space-between; font-size: 10.5px;">
+              <span style="color: var(--accent-green); font-weight: 800;">● LIVE • Innings Break</span>
+              <span style="color: var(--accent-gold); font-weight: 800;">Rank #8 / 5,000</span>
+            </div>
+            <div class="match-teams-row">
+              <span style="font-size: 13.5px; font-weight: 800;">NZ (189/6) vs PAK</span>
+              <span style="font-size: 12px; font-weight: 800; color: var(--accent-green);">PTS: 340.0</span>
+            </div>
+            <p style="font-size: 10px; color: var(--text-tertiary);">Team 2 • Captain: D. Conway (112 pts)</p>
+            <button class="primary-btn" style="padding: 6px; font-size: 11px; background: var(--bg-surface-hover); color: #fff;" onclick="triggerToast('Opening Live Ball-By-Ball Leaderboard')">
+              Live Scorecard & Rank
+            </button>
+          </div>
+        `;
+      } else if (type === 'completed') {
+        container.innerHTML = `
+          <div class="match-card">
+            <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
+              <span>Yesterday • Completed</span>
+              <span style="color: var(--accent-green); font-weight: 800;">Won ₹1,50,000.00</span>
+            </div>
+            <div class="match-teams-row">
+              <span style="font-size: 13.5px; font-weight: 800;">IND vs ENG 3rd T20</span>
+              <span style="font-size: 12px; font-weight: 800; color: var(--accent-gold);">Rank #1 / 35,000</span>
+            </div>
+            <div class="match-footer">
+              <span>Points: 892.5</span>
+              <span style="color: var(--accent-green); font-weight: 800;">Credited to Winnings</span>
+            </div>
+          </div>
+          <div class="match-card">
+            <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
+              <span>28 Aug • Completed</span>
+              <span style="color: var(--accent-green); font-weight: 800;">Won ₹1,50,000.00</span>
+            </div>
+            <div class="match-teams-row">
+              <span style="font-size: 13.5px; font-weight: 800;">RSA vs AUS 1st ODI</span>
+              <span style="font-size: 12px; font-weight: 800; color: var(--accent-gold);">Rank #1 / 12,000</span>
+            </div>
+            <div class="match-footer">
+              <span>Points: 670.0</span>
+              <span style="color: var(--accent-green); font-weight: 800;">Credited to Winnings</span>
+            </div>
+          </div>
+        `;
+      }
+      lucide.createIcons();
+    }
+
+    // Switch Winners Tab
+    function switchWinnersTab(tabType) {
+      appState.winnersTab = tabType;
+      document.getElementById('btn-cricket-top-win').classList.toggle('active', tabType === 'top');
+      document.getElementById('btn-cricket-latest-win').classList.toggle('active', tabType === 'latest');
+      document.getElementById('cricket-winners-heading').textContent = tabType === 'top' ? 'Top Winners' : 'Latest Winners';
+      renderWinners();
+    }
+
+    function renderWinners() {
+      const tabType = appState.winnersTab;
+      const listContainer = document.getElementById('cricket-winners-list');
+      if (!listContainer) return;
+
+      const data = appState.winners[tabType];
+      listContainer.innerHTML = '';
+
+      data.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'list-tile';
+        div.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 16px; font-weight: 800;">${item.rank}</span>
+            <div>
+              <div style="font-size: 12.5px; font-weight: 700;">${item.name}</div>
+              <div style="font-size: 10px; color: var(--text-tertiary);">${item.subtitle}</div>
+            </div>
+          </div>
+          <span style="font-size: 12.5px; font-weight: 800; color: var(--accent-green); font-family: 'JetBrains Mono', monospace;">
+            ${item.prize}
+          </span>
+        `;
+        listContainer.appendChild(div);
+      });
+      lucide.createIcons();
+    }
+
+    // Profile Fullscreen Pop Layer
+    function openProfileLayer() {
+      updateProfileStatsDisplay();
+      updateDynamicRuleTexts();
+      renderVerifiedAddresses();
+      syncProfileVisuals();
+      openProfileSubview('main');
+      closeProfileEditPopup();
+      document.getElementById('profile-fullscreen-layer').classList.add('active');
+    }
+
+    function closeProfileLayer() {
+      closeProfileEditPopup();
+      document.getElementById('profile-fullscreen-layer').classList.remove('active');
+    }
+
+    function handleProfileBack() {
+      closeProfileEditPopup();
+      if (appState.activeProfileSubview === 'live-chat' || appState.activeProfileSubview === 'chat-history') {
+        openProfileSubview('support');
+      } else if (appState.activeProfileSubview === 'main') {
+        closeProfileLayer();
+      } else {
+        openProfileSubview('main');
+      }
+    }
+
+    function openProfileSubview(subviewId) {
+      appState.activeProfileSubview = subviewId;
+      closeProfileEditPopup();
+      const subviews = ['main', 'wallet', 'transactions', 'howtoplay', 'terms', 'support', 'live-chat', 'chat-history'];
+      subviews.forEach(id => {
+        const el = document.getElementById(`subview-profile-${id}`);
+        if (el) el.style.display = (id === subviewId) ? 'flex' : 'none';
+      });
+
+      const titleMap = {
+        'main': 'My Profile',
+        'wallet': 'Wallet',
+        'transactions': 'Transaction History',
+        'howtoplay': 'How to Play & Points System',
+        'terms': 'Terms & Conditions',
+        'support': 'Help & Support',
+        'live-chat': 'Live Support Chat',
+        'chat-history': 'Chat & Ticket History'
+      };
+      document.getElementById('profile-layer-title').textContent = titleMap[subviewId] || 'My Profile';
+
+      if (subviewId === 'transactions') {
+        filterTransactions('all');
+      }
+      lucide.createIcons();
+    }
+
+    // Profile Edit Popup Controls
+    function toggleProfileEditPopup(event) {
+      if (event) event.stopPropagation();
+      const popup = document.getElementById('profile-edit-popup');
+      if (popup.classList.contains('open')) {
+        closeProfileEditPopup();
+      } else {
+        document.getElementById('popup-profile-name').value = appState.userProfile.name;
+        document.getElementById('popup-profile-email').value = appState.userProfile.email;
+        popup.classList.add('open');
+      }
+    }
+
+    function closeProfileEditPopup() {
+      const popup = document.getElementById('profile-edit-popup');
+      if (popup) popup.classList.remove('open');
+    }
+
+    function savePopupProfileChanges() {
+      const name = document.getElementById('popup-profile-name').value.trim();
+      const email = document.getElementById('popup-profile-email').value.trim();
+
+      if (!name || !email) {
+        triggerToast('⚠️ Please fill in all fields');
+        return;
+      }
+
+      appState.userProfile.name = name;
+      appState.userProfile.email = email;
+
+      syncProfileVisuals();
+      closeProfileEditPopup();
+      triggerToast('✅ Profile updated successfully!');
+    }
+
+    function syncProfileVisuals() {
+      const initial = appState.userProfile.name.trim().charAt(0).toUpperCase() || 'D';
+      document.getElementById('header-avatar-initial').textContent = initial;
+      document.getElementById('profile-card-avatar').textContent = initial;
+      document.getElementById('profile-display-name').textContent = appState.userProfile.name;
+      
+      if (document.getElementById('profile-display-x')) {
+        document.getElementById('profile-display-x').textContent = appState.userProfile.x;
+        document.getElementById('profile-display-ig').textContent = appState.userProfile.instagram;
+        document.getElementById('profile-display-tg').textContent = appState.userProfile.telegram;
+      }
+    }
+
+    function updateProfileStatsDisplay() {
+      const stats = appState.stats;
+      const rate = Math.round((stats.won / stats.played) * 100);
+
+      document.getElementById('profile-stats-label').textContent = 'Fantasy Cricket Statistics';
+      document.getElementById('stat-played').textContent = stats.played;
+      document.getElementById('stat-won').textContent = `${stats.won} (${rate}%)`;
+    }
+
+    // Dynamic Rule Texts & Title Sync
+    function updateDynamicRuleTexts() {
+      const howContent = document.getElementById('howtoplay-fullscreen-content');
+      const termsContent = document.getElementById('terms-fullscreen-content');
+      const howToPlayMenuLabel = document.getElementById('menu-label-howtoplay');
+
+      if (howToPlayMenuLabel) {
+        howToPlayMenuLabel.textContent = 'How to Play & Points System';
+      }
+
+      if (appState.activeProfileSubview === 'howtoplay') {
+        document.getElementById('profile-layer-title').textContent = 'How to Play & Points System';
+      }
+
+      howContent.innerHTML = `
+        <div><strong>1. Select a Match:</strong> Choose any upcoming match from T10, T20, ODI, or Test formats.</div>
+        <div><strong>2. Create Your Fantasy 11:</strong> Select 11 real players within 100 credits (WK, BAT, AR, BOWL). Max 7 players from one team.</div>
+        <div><strong>3. Multipliers:</strong> Captain gets <strong>2x points</strong>, Vice-Captain gets <strong>1.5x points</strong>.</div>
+        
+        <div class="points-table-container">
+          <span style="font-size: 13px; font-weight: 800; color: #fff;">🏏 Dream11 Fantasy Point System</span>
+          
+          <div style="font-size: 11.5px; font-weight: 700; color: var(--accent-gold); margin-top: 4px;">Batting Points</div>
+          <div class="pts-table-wrap">
+            <table class="pts-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>T10</th>
+                  <th>T20</th>
+                  <th>ODI</th>
+                  <th>Test</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Run Scored</td><td>+1</td><td>+1</td><td>+1</td><td>+1</td></tr>
+                <tr><td>Boundary Bonus (4s)</td><td>+1</td><td>+1</td><td>+1</td><td>+1</td></tr>
+                <tr><td>Six Bonus (6s)</td><td>+2</td><td>+2</td><td>+2</td><td>+2</td></tr>
+                <tr><td>30 Run Bonus</td><td>+8</td><td>+4</td><td>N/A</td><td>N/A</td></tr>
+                <tr><td>Half-Century (50)</td><td>+16</td><td>+8</td><td>+4</td><td>+4</td></tr>
+                <tr><td>Century (100)</td><td>N/A</td><td>+16</td><td>+8</td><td>+8</td></tr>
+                <tr><td>Duck (except Bowler)</td><td>-2</td><td>-2</td><td>-3</td><td>-4</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="font-size: 11.5px; font-weight: 700; color: var(--accent-green); margin-top: 4px;">Bowling Points</div>
+          <div class="pts-table-wrap">
+            <table class="pts-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>T10</th>
+                  <th>T20</th>
+                  <th>ODI</th>
+                  <th>Test</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Wicket (Excl. Run Out)</td><td>+25</td><td>+25</td><td>+25</td><td>+16</td></tr>
+                <tr><td>LBW / Bowled Bonus</td><td>+8</td><td>+8</td><td>+8</td><td>+8</td></tr>
+                <tr><td>2 Wicket Bonus</td><td>+8</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>
+                <tr><td>3 Wicket Bonus</td><td>+16</td><td>+4</td><td>+4</td><td>N/A</td></tr>
+                <tr><td>4 Wicket Bonus</td><td>N/A</td><td>+8</td><td>+8</td><td>+4</td></tr>
+                <tr><td>5 Wicket Bonus</td><td>N/A</td><td>+16</td><td>+16</td><td>+16</td><td>+8</td></tr>
+                <tr><td>Maiden Over</td><td>+16</td><td>+12</td><td>+6</td><td>N/A</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="font-size: 11.5px; font-weight: 700; color: var(--accent-blue); margin-top: 4px;">Fielding Points</div>
+          <div class="pts-table-wrap">
+            <table class="pts-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>T10</th>
+                  <th>T20</th>
+                  <th>ODI</th>
+                  <th>Test</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Catch</td><td>+8</td><td>+8</td><td>+8</td><td>+8</td></tr>
+                <tr><td>3 Catch Bonus</td><td>+4</td><td>+4</td><td>+4</td><td>+4</td></tr>
+                <tr><td>Stumping</td><td>+12</td><td>+12</td><td>+12</td><td>+12</td></tr>
+                <tr><td>Run Out (Direct Hit)</td><td>+12</td><td>+12</td><td>+12</td><td>+12</td></tr>
+                <tr><td>Run Out (Thrower/Catcher)</td><td>+6</td><td>+6</td><td>+6</td><td>+6</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="font-size: 11.5px; font-weight: 700; color: var(--accent-purple); margin-top: 4px;">Economy Rate Points (Min 1 Over in T10, 2 in T20, 5 in ODI)</div>
+          <div class="pts-table-wrap">
+            <table class="pts-table">
+              <thead>
+                <tr>
+                  <th>Economy Rate</th>
+                  <th>T10</th>
+                  <th>T20</th>
+                  <th>ODI</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Below 5 RPO</td><td>+6</td><td>+6</td><td>+6</td></tr>
+                <tr><td>5 - 5.99 RPO</td><td>+4</td><td>+4</td><td>+4</td></tr>
+                <tr><td>6 - 7 RPO</td><td>+2</td><td>+2</td><td>+2</td></tr>
+                <tr><td>10 - 11 RPO</td><td>-2</td><td>-2</td><td>-2</td></tr>
+                <tr><td>Above 12 RPO</td><td>-6</td><td>-6</td><td>-6</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="font-size: 11.5px; font-weight: 700; color: var(--accent-brand); margin-top: 4px;">Strike Rate Points (Min balls: 5 in T10, 10 in T20, 20 in ODI)</div>
+          <div class="pts-table-wrap">
+            <table class="pts-table">
+              <thead>
+                <tr>
+                  <th>Strike Rate</th>
+                  <th>T10</th>
+                  <th>T20</th>
+                  <th>ODI</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Above 170</td><td>+6</td><td>+6</td><td>+6</td></tr>
+                <tr><td>150.01 - 170</td><td>+4</td><td>+4</td><td>+4</td></tr>
+                <tr><td>130 - 150</td><td>+2</td><td>+2</td><td>+2</td></tr>
+                <tr><td>60 - 70</td><td>-2</td><td>-2</td><td>-2</td></tr>
+                <tr><td>Below 50</td><td>-6</td><td>-6</td><td>-6</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      termsContent.innerHTML = `
+        <div><strong>1. Skill-Based Sport:</strong> Daily Fantasy Sports is recognized and protected as a game of skill under Indian jurisprudence.</div>
+        <div><strong>2. Strict Deadline Lock:</strong> Team edits and submissions lock strictly at the exact first-ball scheduled time. Late changes are blocked automatically.</div>
+        <div><strong>3. Bonus Utilization:</strong> Up to 15% Bonus balance can be applied toward entry fees in designated Mega Contests.</div>
+        <div><strong>4. Zero Tax & Deductions:</strong> Apex Gaming does not deduct any tax or TDS from your winnings or deposits. You receive 100% of your prize pool earnings directly.</div>
+        <div style="background: rgba(229,184,105,0.12); padding: 10px; border-radius: 8px; border: 1px solid rgba(229,184,105,0.3); color: #fff;">
+          <strong>5. Crypto Withdrawal Policy:</strong> You can only take withdrawals to a verified crypto address. To verify an address, you must complete a deposit from that address. For security, you can withdraw money to a newly added address only after a <strong>24-hour verification cooldown</strong>.
+        </div>
+      `;
+    }
+
+    function toggleFaqCard(card) {
+      card.classList.toggle('open');
+      lucide.createIcons();
+    }
+
+    // Support Live Chat
+    function sendLiveChatMessage() {
+      const input = document.getElementById('chat-live-user-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const container = document.getElementById('live-chat-messages');
+      
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble chat-user';
+      userBubble.textContent = text;
+      container.appendChild(userBubble);
+      input.value = '';
+
+      setTimeout(() => {
+        const agentBubble = document.createElement('div');
+        agentBubble.className = 'chat-bubble chat-agent';
+        agentBubble.textContent = `Thanks ${appState.userProfile.name}! Ticket #${Math.floor(1000 + Math.random() * 9000)} created. An agent is reviewing your query right now.`;
+        container.appendChild(agentBubble);
+      }, 1000);
+    }
+
+    // Verified Address Manager
+    function renderVerifiedAddresses() {
+      const container = document.getElementById('verified-addresses-list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (appState.verifiedWallets.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-tertiary); font-size: 11px; padding: 14px 0;">No verified addresses linked</div>`;
+      }
+
+      appState.verifiedWallets.forEach((w, index) => {
+        const item = document.createElement('div');
+        item.className = 'list-tile';
+        item.innerHTML = `
+          <div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 12.5px; font-weight: 700;">${w.label}</span>
+              ${w.isCooldown 
+                ? '<span style="font-size: 8.5px; font-weight: 800; color: var(--accent-gold); background: rgba(229,184,105,0.15); padding: 2px 6px; border-radius: 4px;">24H COOLDOWN</span>'
+                : '<span style="font-size: 8.5px; font-weight: 800; color: var(--accent-green); background: rgba(16,185,129,0.15); padding: 2px 6px; border-radius: 4px;">VERIFIED</span>'}
+            </div>
+            <div style="font-size: 10px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">${w.address}</div>
+          </div>
+
+          <button class="icon-btn" style="width: 28px; height: 28px; border-radius: 50%;" onclick="toggleAddressMenu(event, ${index})">
+            <i data-lucide="more-vertical" style="width: 15px; height: 15px;"></i>
+          </button>
+
+          <div class="address-menu-popup" id="address-menu-${index}" onclick="event.stopPropagation()">
+            <button class="address-menu-btn" onclick="removeVerifiedAddress(${index})">
+              <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+              <span>Remove Address</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+
+      const select = document.getElementById('withdraw-verified-select');
+      if (select) {
+        select.innerHTML = '';
+        appState.verifiedWallets.forEach(w => {
+          const opt = document.createElement('option');
+          opt.value = w.address;
+          opt.textContent = `${w.label} (${w.address})`;
+          select.appendChild(opt);
+        });
+      }
+      lucide.createIcons();
+    }
+
+    function toggleAddressMenu(event, index) {
+      event.stopPropagation();
+      const popup = document.getElementById(`address-menu-${index}`);
+      const wasOpen = popup.classList.contains('open');
+      document.querySelectorAll('.address-menu-popup').forEach(p => p.classList.remove('open'));
+      if (!wasOpen) popup.classList.add('open');
+    }
+
+    function removeVerifiedAddress(index) {
+      const targetWallet = appState.verifiedWallets[index];
+      if (!targetWallet) return;
+
+      document.querySelectorAll('.address-menu-popup').forEach(p => p.classList.remove('open'));
+      appState.addressToRemoveIndex = index;
+      
+      const desc = document.getElementById('address-remove-modal-desc');
+      if (desc) {
+        desc.textContent = `Are you sure you want to remove "${targetWallet.label}" (${targetWallet.address})?`;
+      }
+      openModal('address-remove-confirm-modal');
+    }
+
+    function executeConfirmedAddressRemove() {
+      const index = appState.addressToRemoveIndex;
+      if (index !== null && appState.verifiedWallets[index]) {
+        const removed = appState.verifiedWallets.splice(index, 1);
+        renderVerifiedAddresses();
+        triggerToast(`🗑️ Removed ${removed[0]?.label || 'address'}`);
+      }
+      appState.addressToRemoveIndex = null;
+      closeModal('address-remove-confirm-modal');
+    }
+
+    document.addEventListener('click', () => {
+      closeProfileEditPopup();
+      document.querySelectorAll('.address-menu-popup').forEach(p => p.classList.remove('open'));
+    });
+
+    function openAddAddressModal() {
+      document.getElementById('new-address-title').value = '';
+      document.getElementById('new-address-input').value = '';
+      openModal('add-address-modal');
+    }
+
+    function promptAddAddress() {
+      openAddAddressModal();
+    }
+
+    function confirmAddNewAddress() {
+      const title = document.getElementById('new-address-title').value.trim();
+      const network = document.getElementById('new-address-network').value;
+      const address = document.getElementById('new-address-input').value.trim();
+
+      if (!title) {
+        triggerToast('⚠️ Please enter a title');
+        return;
+      }
+      if (!address || address.length < 8) {
+        triggerToast('⚠️ Please enter a valid address');
+        return;
+      }
+
+      const displayAddr = address.length > 14 
+        ? `${address.substring(0, 8)}...${address.slice(-4)}` 
+        : address;
+
+      appState.verifiedWallets.push({
+        id: Date.now(),
+        label: `${title} (${network})`,
+        address: displayAddr,
+        network: network,
+        isCooldown: true
+      });
+
+      renderVerifiedAddresses();
+      closeModal('add-address-modal');
+      document.getElementById('new-address-title').value = '';
+      document.getElementById('new-address-input').value = '';
+      triggerToast('✅ Your new address is added!');
+    }
+
+    // Transactions Filtering Engine
+    function filterTransactions(category) {
+      appState.currentTxFilter = category;
+      document.querySelectorAll('#subview-profile-transactions .tab-pill-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`tx-filter-${category}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const container = document.getElementById('tx-screen-list-container');
+      container.innerHTML = '';
+
+      let filtered = appState.transactions;
+      if (category !== 'all') {
+        filtered = filtered.filter(t => t.category === category);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-tertiary); font-size: 11px; padding: 24px 0;">No transactions in this category</div>`;
+        return;
+      }
+
+      filtered.forEach(tx => {
+        const item = document.createElement('div');
+        item.className = 'list-tile';
+        const isPositive = tx.amount.startsWith('+');
+        item.innerHTML = `
+          <div>
+            <div style="font-size: 12px; font-weight: 700;">${tx.type}</div>
+            <div style="font-size: 10px; color: var(--text-tertiary);">${tx.date} • ${tx.status}</div>
+          </div>
+          <span style="font-size: 13px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: ${isPositive ? 'var(--accent-green)' : 'var(--text-primary)'};">
+            ${tx.amount}
+          </span>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Wallet Modals & Operations
+    function openHomeWalletModal() {
+      syncWalletVisuals();
+      openModal('wallet-modal-popup');
+    }
+
+    function openDepositPage() {
+      calculateDepositConversion();
+      openModal('deposit-modal');
+    }
+
+    function openWithdrawPage() {
+      calculateWithdrawConversion();
+      renderVerifiedAddresses();
+      openModal('withdraw-modal');
+    }
+
+    function calculateDepositConversion() {
+      const cryptoVal = parseFloat(document.getElementById('deposit-crypto-input').value) || 0;
+      const inrVal = cryptoVal * 95;
+      document.getElementById('deposit-inr-result').textContent = `₹${inrVal.toLocaleString('en-IN')} INR`;
+    }
+
+    function calculateWithdrawConversion() {
+      const inrVal = parseFloat(document.getElementById('withdraw-inr-input').value) || 0;
+      const cryptoVal = (inrVal / 95).toFixed(2);
+      document.getElementById('withdraw-crypto-result').textContent = `${cryptoVal} USDT`;
+    }
+
+    function executeCryptoDeposit() {
+      const cryptoVal = parseFloat(document.getElementById('deposit-crypto-input').value) || 0;
+      const token = document.getElementById('deposit-token-select').value;
+      if (cryptoVal <= 0) {
+        triggerToast('⚠️ Please enter a valid deposit amount');
+        return;
+      }
+      const inrAmount = cryptoVal * 95;
+
+      appState.wallet.deposit += inrAmount;
+      appState.wallet.total += inrAmount;
+
+      appState.transactions.unshift({
+        category: 'deposit',
+        type: `Deposit (${token})`,
+        amount: `+₹${inrAmount.toLocaleString('en-IN')}.00`,
+        date: 'Just Now',
+        status: `Credited (${cryptoVal} Tokens)`
+      });
+
+      syncWalletVisuals();
+      closeModal('deposit-modal');
+      triggerToast(`🎉 ₹${inrAmount.toLocaleString('en-IN')} credited via ${cryptoVal} ${token}!`);
+    }
+
+    function executeCryptoWithdraw() {
+      const inrVal = parseFloat(document.getElementById('withdraw-inr-input').value) || 0;
+      const address = document.getElementById('withdraw-verified-select').value;
+
+      const selectedWallet = appState.verifiedWallets.find(w => w.address === address);
+      if (selectedWallet && selectedWallet.isCooldown) {
+        triggerToast('⚠️ This address is under 24-hour verification cooldown!');
+        return;
+      }
+
+      if (inrVal < 1900) {
+        triggerToast('⚠️ Minimum withdrawal is ₹1,900 (20 USDT/USDC)');
+        return;
+      }
+      if (appState.wallet.winnings < inrVal) {
+        triggerToast('⚠️ Insufficient winnings balance to withdraw!');
+        return;
+      }
+
+      const cryptoVal = (inrVal / 95).toFixed(2);
+      appState.wallet.winnings -= inrVal;
+      appState.wallet.total -= inrVal;
+
+      const networkLabel = selectedWallet ? selectedWallet.network : 'USDT';
+      appState.transactions.unshift({
+        category: 'withdrawal',
+        type: `Withdrawal (${networkLabel})`,
+        amount: `-₹${inrVal.toLocaleString('en-IN')}.00`,
+        date: 'Just Now',
+        status: `Dispatched to ${address}`
+      });
+
+      syncWalletVisuals();
+      closeModal('withdraw-modal');
+      triggerToast(`💸 ${cryptoVal} ${networkLabel} dispatched to verified address!`);
+    }
+
+    function joinFantasyContest(name, fee) {
+      if (appState.wallet.total >= fee) {
+        deductFee(fee);
+        appState.stats.played += 1;
+        appState.transactions.unshift({
+          category: 'spend',
+          type: `${name} Entry`,
+          amount: `-₹${fee}.00`,
+          date: 'Just Now',
+          status: 'Debited'
+        });
+        syncWalletVisuals();
+        updateProfileStatsDisplay();
+        triggerToast(`🎉 Joined ${name}! Entry ₹${fee} debited.`);
+      } else {
+        triggerToast('⚠️ Insufficient wallet balance! Deposit to join.');
+        openDepositPage();
+      }
+    }
+
+    function deductFee(fee) {
+      if (appState.wallet.deposit >= fee) {
+        appState.wallet.deposit -= fee;
+      } else {
+        const rem = fee - appState.wallet.deposit;
+        appState.wallet.deposit = 0;
+        appState.wallet.winnings -= rem;
+      }
+      appState.wallet.total -= fee;
+    }
+
+    function syncWalletVisuals() {
+      const format = (val) => `₹${val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      document.querySelectorAll('.display-wallet-total').forEach(el => el.textContent = format(appState.wallet.total));
+      document.querySelectorAll('.display-wallet-deposit').forEach(el => el.textContent = format(appState.wallet.deposit));
+      document.querySelectorAll('.display-wallet-winnings').forEach(el => el.textContent = format(appState.wallet.winnings));
+      document.querySelectorAll('.display-wallet-bonus').forEach(el => el.textContent = format(appState.wallet.bonus));
+    }
+
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add('open');
+      lucide.createIcons();
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove('open');
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
+      }
+    }
+
+    let toastTimer;
+    function triggerToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      toastMsg.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2300);
+    }
+
+    setInterval(() => {
+      if (appState.activeTab === 'home') {
+        jumpCarouselSlide('home', appState.carouselIndices['home'] + 1);
+      }
+      if (appState.activeTab === 'winners') {
+        jumpCarouselSlide('cricket-winners', appState.carouselIndices['cricket-winners'] + 1);
+      }
+    }, 5000);
+
+    // Startup
+    updateNav();
+    syncWalletVisuals();
+    syncProfileVisuals();
+    updateProfileStatsDisplay();
+    updateDynamicRuleTexts();
+    filterMatchesTab('upcoming');
+    renderVerifiedAddresses();
+    renderWinners();
+
+    initCarouselTouchSwipe('home-carousel-container', 'home-carousel-track', 'home');
+    initCarouselTouchSwipe('cricket-winners-carousel-container', 'cricket-winners-carousel-track', 'cricket-winners');
+  </script>
+</body>
+</html>
