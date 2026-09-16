@@ -1216,7 +1216,7 @@
               <!-- Anchored Compact Edit Profile Pop-up -->
               <div class="profile-edit-popup" id="profile-edit-popup" onclick="event.stopPropagation()">
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 4px;">
-                  <span style="font-size: 11.5px; font-weight: 800;">Edit Profile</span>
+                  <span style="font-size: 11.5px; font-weight: 800;">Profile</span>
                   <button style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; display: flex; align-items: center;" onclick="closeProfileEditPopup()">
                     <i data-lucide="x" style="width: 14px; height: 14px;"></i>
                   </button>
@@ -1224,15 +1224,22 @@
 
                 <div class="popup-input-item">
                   <label>NAME</label>
-                  <input type="text" id="popup-profile-name" value="Dharmraj Rajput" readonly />
+                  <input type="text" id="popup-profile-name" value="Dharmraj Rajput" disabled style="opacity: 0.6; cursor: not-allowed;" />
                 </div>
 
                 <div class="popup-input-item">
                   <label>EMAIL</label>
-                  <input type="email" id="popup-profile-email" value="xyz@gmail.com" readonly />
+                  <input type="email" id="popup-profile-email" value="xyz@gmail.com" disabled style="opacity: 0.6; cursor: not-allowed;" />
                 </div>
 
-                <div style="display: flex; gap: 6px; margin-top: 2px;">
+                <!-- Add Recovery Option Visible ONLY here -->
+                <div style="margin-top: 8px; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
+                  <button class="primary-btn secondary-btn" style="width: 100%; padding: 8px 10px; font-size: 11px; border-color: var(--accent-blue); color: var(--accent-blue);" onclick="setupWalletRecovery()">
+                    <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i> Set Wallet Recovery
+                  </button>
+                </div>
+
+                <div style="display: gap: 6px; margin-top: 6px; display: flex;">
                   <button class="primary-btn secondary-btn" style="padding: 6px 10px; font-size: 11px; flex: 1;" onclick="closeProfileEditPopup()">Cancel</button>
                   <button class="primary-btn" style="padding: 6px 10px; font-size: 11px; flex: 1;" onclick="savePopupProfileChanges()">Save</button>
                 </div>
@@ -1454,13 +1461,44 @@
           <span style="font-size: 13px; font-weight: 800; margin-top: 6px;">Frequently Asked Questions (FAQ)</span>
 
           <div style="display: flex; flex-direction: column; gap: 8px;">
+            
+            <div class="faq-card" onclick="toggleFaqCard(this)">
+              <div class="faq-header">
+                <span>How to set up account recovery?</span>
+                <i data-lucide="chevron-down" style="width: 16px; height: 16px;" class="faq-icon"></i>
+              </div>
+              <div class="faq-body">
+                Since we use an email-only login, you can set up a secure Web3 recovery method. Tap the three dots in your profile menu, select <strong>Set Wallet Recovery</strong>, and sign a message using your self-custodial wallet (like Trust Wallet or SafePal). This uses Cryptographic Message Signing to verify ownership and costs zero gas fees.
+              </div>
+            </div>
+
+            <div class="faq-card" onclick="toggleFaqCard(this)">
+              <div class="faq-header">
+                <span>How to recover a lost account?</span>
+                <i data-lucide="chevron-down" style="width: 16px; height: 16px;" class="faq-icon"></i>
+              </div>
+              <div class="faq-body">
+                If you lose access to your email, go to the login screen and click <strong>Recover Account</strong>. You will be prompted to sign a verification message with your linked Web3 wallet. Once the signature is mathematically verified, you can securely set a new email address.
+              </div>
+            </div>
+
             <div class="faq-card" onclick="toggleFaqCard(this)">
               <div class="faq-header">
                 <span>How to deposit in Apex Gaming?</span>
                 <i data-lucide="chevron-down" style="width: 16px; height: 16px;" class="faq-icon"></i>
               </div>
               <div class="faq-body">
-                Go to Wallet > Click <strong>Deposit</strong>. Choose your network (USDT on TRC20, BEP20, ERC20, Arbitrum or USDC on Base, Arbitrum, ERC20). Send crypto to the designated wallet address. Your wallet is automatically credited in INR at the guaranteed conversion rate of <strong>1 USDT / USDC = ₹95 INR</strong> with zero processing fees.
+                Go to Wallet > Click <strong>Deposit</strong>. You can deposit crypto directly (USDT on TRC20, BEP20, ERC20, Arbitrum or USDC on Base, Arbitrum, ERC20 with a minimum of 10 USDT/USDC) or select <strong>INR - UPI</strong>. When you select INR - UPI, a dedicated payment gateway opens where you provide your USDC Base wallet address and enter the USDC amount you want to pay (minimum 10 USDC / ₹950 INR). Payment is supported via UPI. Once payment is verified, the USDC is sent to your wallet address, which you can then deposit into the app.
+              </div>
+            </div>
+
+            <div class="faq-card" onclick="toggleFaqCard(this)">
+              <div class="faq-header">
+                <span>How does the INR Deposit work?</span>
+                <i data-lucide="chevron-down" style="width: 16px; height: 16px;" class="faq-icon"></i>
+              </div>
+              <div class="faq-body">
+                In the Deposit window, select <strong>INR - UPI</strong> from the network list. A dedicated gateway prompt will open where you enter your personal USDC Base wallet address and the USDC amount you want to pay (minimum 10 USDC / ₹950 INR). Payment is only supported via UPI. Once payment is verified, the USDC will be sent directly to your address. You can then deposit that money into the app, as it will not happen automatically.
               </div>
             </div>
 
@@ -1470,7 +1508,7 @@
                 <i data-lucide="chevron-down" style="width: 16px; height: 16px;" class="faq-icon"></i>
               </div>
               <div class="faq-body">
-                Open Wallet > Click <strong>Withdraw</strong>. Enter the withdrawal amount in INR (minimum ₹1,900) and choose your verified crypto destination address. Winnings are converted at 1 USDT = ₹95 INR and dispatched directly to your wallet on-chain.
+                Open Wallet > Click <strong>Withdraw</strong>. Enter the withdrawal amount in INR (minimum 10 USDT/USDC / ₹950) and choose your verified crypto destination address. Winnings are converted at 1 USDT = ₹95 INR and dispatched directly to your wallet on-chain.
               </div>
             </div>
 
@@ -1578,7 +1616,7 @@
                 <span style="font-size: 9.5px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace;">TICKET #8402</span>
               </div>
               <div style="font-size: 12.5px; font-weight: 800; margin-top: 4px;">Withdrawal Cooldown Inquiry</div>
-              <div style="font-size: 10.5px; color: var(--text-secondary); margin-top: 2px;">Resolved: Security cooldown period expired and ₹1,900 payout sent.</div>
+              <div style="font-size: 10.5px; color: var(--text-secondary); margin-top: 2px;">Resolved: Security cooldown period expired and ₹950 payout sent.</div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; border-top: 1px solid var(--border-subtle); padding-top: 6px; font-size: 10px; color: var(--text-tertiary);">
                 <span>Closed on 28 Aug</span>
                 <span style="color: var(--accent-green); font-weight: 700;">Resolved</span>
@@ -1655,19 +1693,19 @@
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
             <span style="font-size: 9.5px; font-weight: 800; color: var(--accent-green);">INSTANT CONVERSION</span>
-            <h3 style="font-size: 16px; font-weight: 800;">Deposit via USDT / USDC</h3>
+            <h3 style="font-size: 16px; font-weight: 800;">Deposit via USDT / USDC / INR</h3>
           </div>
           <button class="icon-btn" onclick="closeModal('deposit-modal')"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button>
         </div>
 
         <p style="font-size: 11px; color: var(--text-secondary);">
-          Fixed Conversion: <strong>1 USDT / USDC = ₹95 INR</strong><br>
-          Supported Networks: <strong>USDT (TRC20, BEP20, ERC20, Arbitrum) • USDC (Base, Arbitrum, ERC20)</strong>
+          Fixed Conversion: <strong>1 USDT / USDC = ₹95 INR</strong> (Min 10 USDT/USDC)<br>
+          Supported Networks: <strong>USDT (TRC20, BEP20, ERC20, Arbitrum) • USDC (Base, Arbitrum, ERC20) • INR - UPI</strong>
         </p>
 
         <div class="input-box">
-          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">SELECT DEPOSIT NETWORK</span>
-          <select id="deposit-token-select" class="network-select">
+          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">SELECT DEPOSIT NETWORK / METHOD</span>
+          <select id="deposit-token-select" class="network-select" onchange="handleDepositNetworkSelect(this.value)">
             <option value="USDT (TRC20)">USDT (TRC20)</option>
             <option value="USDT (BEP20)">USDT (BEP20)</option>
             <option value="USDT (ERC20)">USDT (ERC20)</option>
@@ -1675,20 +1713,56 @@
             <option value="USDC (Base)">USDC (Base)</option>
             <option value="USDC (Arbitrum)">USDC (Arbitrum)</option>
             <option value="USDC (ERC20)">USDC (ERC20)</option>
+            <option value="INR - UPI" style="color: var(--accent-gold); font-weight: 800;">INR - UPI</option>
           </select>
         </div>
 
         <div class="input-box">
-          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">ENTER AMOUNT</span>
-          <input type="number" id="deposit-crypto-input" value="20" oninput="calculateDepositConversion()" />
+          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">ENTER AMOUNT (MIN 10 USDT/USDC)</span>
+          <input type="number" id="deposit-crypto-input" value="10" min="10" oninput="calculateDepositConversion()" />
         </div>
 
         <div class="crypto-conversion-badge">
           <span>You Will Receive in Wallet:</span>
-          <strong style="font-size: 14px; color: #fff;" id="deposit-inr-result">₹1,900 INR</strong>
+          <strong style="font-size: 14px; color: #fff;" id="deposit-inr-result">₹950 INR</strong>
         </div>
 
         <button class="primary-btn" onclick="executeCryptoDeposit()">Deposit & Credit Wallet</button>
+      </div>
+    </div>
+
+    <!-- ================= MODAL: INR PAYMENT GATEWAY ================= -->
+    <div class="modal-overlay" id="inr-gateway-modal" onclick="closeModalOnBackdrop(event)">
+      <div class="modal-sheet">
+        <div class="modal-drag"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <span style="font-size: 9.5px; font-weight: 800; color: var(--accent-gold);">INR DIRECT GATEWAY</span>
+            <h3 style="font-size: 16px; font-weight: 800;">Deposit via INR - UPI</h3>
+          </div>
+          <button class="icon-btn" onclick="closeModal('inr-gateway-modal')"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button>
+        </div>
+
+        <p style="font-size: 11px; color: var(--text-secondary);">
+          Pay using UPI to receive USDC on Base. Fixed rate: <strong>1 USDC = ₹95 INR</strong> (Min 10 USDC / ₹950).
+        </p>
+
+        <div class="input-box">
+          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">ENTER YOUR USDC (BASE) WALLET ADDRESS</span>
+          <input type="text" id="inr-usdc-base-address" placeholder="0x... (Your Base Network USDC address)" />
+        </div>
+
+        <div class="input-box">
+          <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">ENTER USDC AMOUNT TO PAY (MIN 10 USDC)</span>
+          <input type="number" id="inr-gateway-usdc-input" value="10" min="10" oninput="calculateInrGatewayAmount()" />
+        </div>
+
+        <div class="crypto-conversion-badge">
+          <span>Total Payable in INR:</span>
+          <strong style="font-size: 14px; color: #fff;" id="inr-gateway-payable-result">₹950 INR</strong>
+        </div>
+
+        <button class="primary-btn" onclick="executeInrGatewayPayment()">Proceed to Pay & Send to Wallet</button>
       </div>
     </div>
 
@@ -1705,14 +1779,14 @@
         </div>
 
         <p style="font-size: 11px; color: var(--text-secondary);">
-          Fixed Conversion: <strong>1 USDT / USDC = ₹95 INR</strong> (Min ₹1,900)<br>
+          Fixed Conversion: <strong>1 USDT / USDC = ₹95 INR</strong> (Min 10 USDT/USDC / ₹950)<br>
           Withdrawals are locked strictly to your verified crypto deposit addresses.
         </p>
 
         <div class="input-box">
           <span style="font-size: 10px; font-weight: 700; color: var(--text-tertiary);">ENTER WITHDRAWAL AMOUNT (INR)</span>
           <div style="display: flex; align-items: center; justify-content: space-between;">
-            <input type="number" id="withdraw-inr-input" value="1900" oninput="calculateWithdrawConversion()" />
+            <input type="number" id="withdraw-inr-input" value="950" oninput="calculateWithdrawConversion()" />
             <span style="font-size: 14px; font-weight: 800; color: var(--accent-gold);">INR (₹)</span>
           </div>
         </div>
@@ -1730,7 +1804,7 @@
 
         <div class="crypto-conversion-badge">
           <span>You Will Receive in Crypto:</span>
-          <strong style="font-size: 14px; color: #fff;" id="withdraw-crypto-result">20.00 USDT</strong>
+          <strong style="font-size: 14px; color: #fff;" id="withdraw-crypto-result">10.00 USDT</strong>
         </div>
 
         <button class="primary-btn" onclick="executeCryptoWithdraw()">Request Instant Withdrawal</button>
@@ -1872,7 +1946,7 @@
         { category: 'bonus-received', type: 'Welcome Sign-up Bonus', amount: '+₹250.00', date: '01 Sep, 10:00 AM', status: 'Bonus Credited' },
         { category: 'bonus-spend', type: 'Bonus Deducted (15% on IND vs AUS)', amount: '-₹7.35', date: '02 Sep, 6:30 PM', status: 'Bonus Used' },
         { category: 'spend', type: 'ENG vs RSA ODI Entry', amount: '-₹35.00', date: '31 Aug, 5:40 PM', status: 'Contest Entry' },
-        { category: 'withdrawal', type: 'Withdrawal (USDT BEP20)', amount: '-₹1,900.00', date: '30 Aug, 4:15 PM', status: 'Dispatched (20 USDT)' },
+        { category: 'withdrawal', type: 'Withdrawal (USDT BEP20)', amount: '-₹950.00', date: '30 Aug, 4:15 PM', status: 'Dispatched (10 USDT)' },
         { category: 'bonus-received', type: 'IPL Early Bird Bonus Reward', amount: '+₹250.00', date: '29 Aug, 2:10 PM', status: 'Bonus Credited' }
       ]
     };
@@ -2136,7 +2210,7 @@
           <div class="match-card">
             <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
               <span>Yesterday • Completed</span>
-              <span style="color: var(--accent-green); font-weight: 800;">Won ₹1,50,000.00</span>
+              <span style="color: var(--accent-green); font-weight: 800;">Won ₹1,50,00,000.00</span>
             </div>
             <div class="match-teams-row">
               <span style="font-size: 13.5px; font-weight: 800;">IND vs ENG 3rd T20</span>
@@ -2150,7 +2224,7 @@
           <div class="match-card">
             <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-tertiary);">
               <span>28 Aug • Completed</span>
-              <span style="color: var(--accent-green); font-weight: 800;">Won ₹1,50,000.00</span>
+              <span style="color: var(--accent-green); font-weight: 800;">Won ₹1,50,00,000.00</span>
             </div>
             <div class="match-teams-row">
               <span style="font-size: 13.5px; font-weight: 800;">RSA vs AUS 1st ODI</span>
@@ -2291,6 +2365,12 @@
       closeProfileEditPopup();
       triggerToast('✅ Profile updated successfully!');
     }
+    
+    // Recovery Wallet Flow Setup
+    function setupWalletRecovery() {
+        closeProfileEditPopup();
+        triggerToast('🔗 Opening Web3 Wallet to sign recovery message...');
+    }
 
     function syncProfileVisuals() {
       const initial = appState.userProfile.name.trim().charAt(0).toUpperCase() || 'D';
@@ -2378,7 +2458,7 @@
                 <tr><td>2 Wicket Bonus</td><td>+8</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>
                 <tr><td>3 Wicket Bonus</td><td>+16</td><td>+4</td><td>+4</td><td>N/A</td></tr>
                 <tr><td>4 Wicket Bonus</td><td>N/A</td><td>+8</td><td>+8</td><td>+4</td></tr>
-                <tr><td>5 Wicket Bonus</td><td>N/A</td><td>+16</td><td>+16</td><td>+16</td><td>+8</td></tr>
+                <tr><td>5 Wicket Bonus</td><td>N/A</td><td>+16</td><td>+16</td><td>+8</td></tr>
                 <tr><td>Maiden Over</td><td>+16</td><td>+12</td><td>+6</td><td>N/A</td></tr>
               </tbody>
             </table>
@@ -2668,6 +2748,64 @@
       openModal('deposit-modal');
     }
 
+    function handleDepositNetworkSelect(val) {
+      if (val.startsWith('INR')) {
+        closeModal('deposit-modal');
+        openInrGatewayModal();
+        document.getElementById('deposit-token-select').value = 'USDT (TRC20)';
+      }
+    }
+
+    function openInrGatewayModal() {
+      document.getElementById('inr-usdc-base-address').value = '';
+      document.getElementById('inr-gateway-usdc-input').value = '10';
+      calculateInrGatewayAmount();
+      openModal('inr-gateway-modal');
+    }
+
+    function calculateInrGatewayAmount() {
+      const usdcVal = parseFloat(document.getElementById('inr-gateway-usdc-input').value) || 0;
+      const inrVal = usdcVal * 95;
+      const resEl = document.getElementById('inr-gateway-payable-result');
+      if (resEl) {
+        resEl.textContent = `₹${inrVal.toLocaleString('en-IN')} INR`;
+      }
+    }
+
+    function executeInrGatewayPayment() {
+      const address = document.getElementById('inr-usdc-base-address').value.trim();
+      const usdcVal = parseFloat(document.getElementById('inr-gateway-usdc-input').value) || 0;
+
+      if (!address || address.length < 10) {
+        triggerToast('⚠️ Please enter a valid USDC Base address');
+        return;
+      }
+      if (usdcVal < 10) {
+        triggerToast('⚠️ Minimum deposit is 10 USDC (₹950 INR)');
+        return;
+      }
+
+      const inrAmount = usdcVal * 95;
+      appState.wallet.deposit += inrAmount;
+      appState.wallet.total += inrAmount;
+
+      const displayAddr = address.length > 14 
+        ? `${address.substring(0, 6)}...${address.slice(-4)}` 
+        : address;
+
+      appState.transactions.unshift({
+        category: 'deposit',
+        type: 'Deposit (INR Gateway - USDC Base)',
+        amount: `+₹${inrAmount.toLocaleString('en-IN')}.00`,
+        date: 'Just Now',
+        status: `Credited (${usdcVal} USDC to ${displayAddr})`
+      });
+
+      syncWalletVisuals();
+      closeModal('inr-gateway-modal');
+      triggerToast(`🎉 Payment successful! ${usdcVal} USDC (₹${inrAmount.toLocaleString('en-IN')}) sent to your wallet.`);
+    }
+
     function openWithdrawPage() {
       calculateWithdrawConversion();
       renderVerifiedAddresses();
@@ -2689,8 +2827,8 @@
     function executeCryptoDeposit() {
       const cryptoVal = parseFloat(document.getElementById('deposit-crypto-input').value) || 0;
       const token = document.getElementById('deposit-token-select').value;
-      if (cryptoVal <= 0) {
-        triggerToast('⚠️ Please enter a valid deposit amount');
+      if (cryptoVal < 10) {
+        triggerToast('⚠️ Minimum deposit is 10 USDT/USDC (₹950 INR)');
         return;
       }
       const inrAmount = cryptoVal * 95;
@@ -2721,8 +2859,8 @@
         return;
       }
 
-      if (inrVal < 1900) {
-        triggerToast('⚠️ Minimum withdrawal is ₹1,900 (20 USDT/USDC)');
+      if (inrVal < 950) {
+        triggerToast('⚠️ Minimum withdrawal is ₹950 (10 USDT/USDC)');
         return;
       }
       if (appState.wallet.winnings < inrVal) {
